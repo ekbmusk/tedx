@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { TIER_LABEL, type Tier } from "@/config/event";
 
 type Ticket = {
   id: string;
@@ -9,6 +10,8 @@ type Ticket = {
   status: "issued" | "activated" | "used";
   holder_name: string | null;
   category: string | null;
+  tier: Tier | null;
+  order_no: string | null;
   created_at: string;
 };
 
@@ -36,10 +39,11 @@ export function TicketsTable({ tickets }: { tickets: Ticket[] }) {
       <table className="w-full text-sm">
         <thead className="bg-black/40 text-left text-xs uppercase tracking-wider text-[var(--color-fg-muted)]">
           <tr>
-            <th className="px-4 py-3">{t("table.token")}</th>
+            <th className="px-4 py-3">{t("table.orderNo")}</th>
+            <th className="px-4 py-3">{t("table.tier")}</th>
             <th className="px-4 py-3">{t("table.holder")}</th>
             <th className="px-4 py-3">{t("table.status")}</th>
-            <th className="px-4 py-3">{t("table.category")}</th>
+            <th className="px-4 py-3">{t("table.token")}</th>
             <th className="px-4 py-3">{t("table.created")}</th>
             <th className="px-4 py-3 text-right">{t("table.actions")}</th>
           </tr>
@@ -51,6 +55,16 @@ export function TicketsTable({ tickets }: { tickets: Ticket[] }) {
               className="border-t border-[var(--color-line)] hover:bg-white/5"
             >
               <td className="px-4 py-3 font-mono text-xs">
+                {tk.order_no ?? "—"}
+              </td>
+              <td className="px-4 py-3">
+                {tk.tier ? <TierBadge tier={tk.tier} /> : "—"}
+              </td>
+              <td className="px-4 py-3">{tk.holder_name ?? "—"}</td>
+              <td className="px-4 py-3">
+                <StatusBadge status={tk.status} />
+              </td>
+              <td className="px-4 py-3 font-mono text-xs text-[var(--color-fg-muted)]">
                 <a
                   href={`/t/${tk.token}`}
                   target="_blank"
@@ -59,13 +73,6 @@ export function TicketsTable({ tickets }: { tickets: Ticket[] }) {
                 >
                   {tk.token}
                 </a>
-              </td>
-              <td className="px-4 py-3">{tk.holder_name ?? "—"}</td>
-              <td className="px-4 py-3">
-                <StatusBadge status={tk.status} />
-              </td>
-              <td className="px-4 py-3 text-[var(--color-fg-muted)]">
-                {tk.category ?? "—"}
               </td>
               <td className="px-4 py-3 text-[var(--color-fg-muted)]">
                 {new Date(tk.created_at).toLocaleString("kk-KZ")}
@@ -98,6 +105,21 @@ function StatusBadge({ status }: { status: Ticket["status"] }) {
       className={`inline-flex rounded-md border px-2 py-0.5 text-xs font-medium ${map[status]}`}
     >
       {t(status)}
+    </span>
+  );
+}
+
+function TierBadge({ tier }: { tier: Tier }) {
+  const map: Record<Tier, string> = {
+    "pre-sale": "border-amber-500/40 bg-amber-500/10 text-amber-300",
+    vip: "border-zinc-300/40 bg-zinc-300/10 text-zinc-200",
+    standard: "border-red-500/40 bg-red-500/10 text-red-300",
+  };
+  return (
+    <span
+      className={`inline-flex rounded-md border px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider ${map[tier]}`}
+    >
+      {TIER_LABEL[tier]}
     </span>
   );
 }

@@ -3,25 +3,31 @@
 import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { createTicket } from "@/app/admin/actions";
+import { TIERS, type Tier } from "@/config/event";
 
 export function CreateTicketForm() {
   const t = useTranslations("admin");
   const tn = useTranslations("admin.newTicket");
+  const tt = useTranslations("admin.tierOptions");
   const [pending, startTransition] = useTransition();
-  const [token, setToken] = useState<string | null>(null);
+  const [result, setResult] = useState<{
+    token: string;
+    orderNo: string;
+    tier: Tier;
+  } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
-  const url = token ? `${window.location.origin}/t/${token}` : "";
+  const url = result ? `${window.location.origin}/t/${result.token}` : "";
   const waMessage = encodeURIComponent(
-    `Сәлеметсіз бе! Мынау сіздің TEDxZhenysPark билетіңіз: ${url}\n\nСілтемені ашып, аты-жөніңізді енгізсеңіз — кіруге арналған QR кодын аласыз.`,
+    `Сәлеметсіз бе! Мынау сіздің TEDxZhenysPark билетіңіз: ${url}\n\nСілтемені ашып, аты-жөніңізді енгізсеңіз — кіруге арналған QR кодын және PDF билетті аласыз.`,
   );
 
   return (
     <div className="rounded-2xl border border-[var(--color-line)] bg-[var(--color-bg-soft)] p-6">
-      {!token ? (
+      {!result ? (
         <form
-          className="flex flex-col gap-4"
+          className="flex flex-col gap-5"
           onSubmit={(e) => {
             e.preventDefault();
             setError(null);
@@ -29,11 +35,39 @@ export function CreateTicketForm() {
             startTransition(async () => {
               const res = await createTicket(fd);
               if (!res.ok) setError(res.error);
-              else setToken(res.token);
+              else
+                setResult({
+                  token: res.token,
+                  orderNo: res.orderNo,
+                  tier: res.tier,
+                });
             });
           }}
         >
-          <Field name="category" label={tn("category")} />
+          <fieldset className="flex flex-col gap-2">
+            <legend className="text-xs uppercase tracking-wider text-[var(--color-fg-muted)]">
+              {tn("tier")}
+            </legend>
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+              {TIERS.map((tier, i) => (
+                <label
+                  key={tier}
+                  className="flex cursor-pointer items-center gap-2 rounded-md border border-[var(--color-line)] bg-black/40 px-3 py-3 text-sm transition-colors hover:border-white has-[input:checked]:border-[var(--color-red)] has-[input:checked]:bg-[var(--color-red)]/10"
+                >
+                  <input
+                    type="radio"
+                    name="tier"
+                    value={tier}
+                    defaultChecked={i === 0}
+                    className="accent-[var(--color-red)]"
+                    required
+                  />
+                  <span className="font-medium">{tt(tier)}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
           <Field name="note" label={tn("note")} />
           {error && (
             <div className="rounded-md border border-red-500/40 bg-red-500/10 p-3 text-sm text-red-300">
@@ -50,7 +84,22 @@ export function CreateTicketForm() {
         </form>
       ) : (
         <div className="flex flex-col gap-4">
-          <p className="text-sm text-[var(--color-fg-muted)]">{tn("linkReady")}</p>
+          <div className="flex items-center justify-between gap-3 border-b border-[var(--color-line)] pb-3">
+            <div>
+              <p className="text-xs uppercase tracking-wider text-[var(--color-fg-muted)]">
+                {tn("orderReady")}
+              </p>
+              <p className="font-display text-2xl font-extrabold">
+                {result.orderNo}
+              </p>
+            </div>
+            <span className="rounded-md border border-[var(--color-red)] bg-[var(--color-red)]/10 px-2 py-1 text-xs font-bold uppercase tracking-wider text-[var(--color-red)]">
+              {tt(result.tier)}
+            </span>
+          </div>
+          <p className="text-sm text-[var(--color-fg-muted)]">
+            {tn("linkReady")}
+          </p>
           <div className="rounded-md border border-[var(--color-line)] bg-black/40 p-3 font-mono text-sm break-all">
             {url}
           </div>
@@ -74,7 +123,10 @@ export function CreateTicketForm() {
               {t("openInWhatsapp")}
             </a>
             <button
-              onClick={() => setToken(null)}
+              onClick={() => {
+                setResult(null);
+                setError(null);
+              }}
               className="rounded-full border border-[var(--color-line)] px-4 py-2 text-sm hover:border-white"
             >
               + {t("create")}

@@ -11,7 +11,7 @@ export default async function AdminHomePage() {
   const { data: tickets, error } = await supabase
     .from("tickets")
     .select(
-      "id, token, status, holder_name, holder_contact, category, created_at, activated_at, used_at",
+      "id, token, status, holder_name, holder_contact, category, tier, order_no, created_at, activated_at, used_at",
     )
     .order("created_at", { ascending: false })
     .limit(500);

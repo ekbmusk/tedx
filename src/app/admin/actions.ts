@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { customAlphabet } from "nanoid";
 import { createClient } from "@/lib/supabase/server";
+import { TIERS, type Tier } from "@/config/event";
 
 const nanoid = customAlphabet("ABCDEFGHJKMNPQRSTUVWXYZ23456789", 10);
 
@@ -29,19 +30,34 @@ export async function createTicket(formData: FormData) {
   const { data: userData } = await supabase.auth.getUser();
   if (!userData.user) return { ok: false as const, error: "unauthenticated" };
 
-  const category = String(formData.get("category") || "").trim() || null;
+  const tier = String(formData.get("tier") || "") as Tier;
+  if (!TIERS.includes(tier)) {
+    return { ok: false as const, error: "invalid_tier" };
+  }
   const note = String(formData.get("note") || "").trim() || null;
+
+  const { data: orderData, error: orderError } = await supabase.rpc(
+    "next_order_no",
+    { p_tier: tier },
+  );
+  if (orderError) return { ok: false as const, error: orderError.message };
+  const orderNo = String(orderData);
 
   const token = nanoid();
   const { data, error } = await supabase
     .from("tickets")
-    .insert({ token, category, note })
-    .select("token")
+    .insert({ token, tier, order_no: orderNo, note })
+    .select("token, order_no")
     .single();
 
   if (error) return { ok: false as const, error: error.message };
   revalidatePath("/admin");
-  return { ok: true as const, token: data.token };
+  return {
+    ok: true as const,
+    token: data.token,
+    orderNo: data.order_no as string,
+    tier,
+  };
 }
 
 export async function checkInTicket(token: string) {

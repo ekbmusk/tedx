@@ -1,8 +1,9 @@
 import { getTranslations } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
-import { event } from "@/config/event";
+import { event, TIER_LABEL, type Tier } from "@/config/event";
 import { ActivationForm } from "@/components/ticket/ActivationForm";
 import { QrDisplay } from "@/components/ticket/QrDisplay";
+import { DownloadPdfButton } from "@/components/ticket/DownloadPdfButton";
 
 type TicketRow = {
   id: string;
@@ -11,6 +12,8 @@ type TicketRow = {
   holder_name: string | null;
   holder_contact: string | null;
   category: string | null;
+  tier: Tier | null;
+  order_no: string | null;
   created_at: string;
   activated_at: string | null;
   used_at: string | null;
@@ -63,6 +66,12 @@ export default async function TicketPage({
           {t("usedTitle")}
         </h1>
         <p className="mt-3 text-[var(--color-fg-muted)]">{t("usedBody")}</p>
+        <div className="mt-6 flex flex-col items-center gap-4">
+          <QrDisplay value={token} />
+          {ticket.tier && ticket.order_no && (
+            <DownloadPdfButton token={token} orderNo={ticket.order_no} />
+          )}
+        </div>
         <TicketMeta ticket={ticket} t={t} />
       </Frame>
     );
@@ -77,6 +86,9 @@ export default async function TicketPage({
         <p className="text-xs uppercase tracking-wider text-[var(--color-fg-muted)]">
           {t("saveScreenshot")}
         </p>
+        {ticket.tier && ticket.order_no && (
+          <DownloadPdfButton token={token} orderNo={ticket.order_no} />
+        )}
       </div>
       <TicketMeta ticket={ticket} t={t} />
     </Frame>
@@ -138,11 +150,15 @@ function TicketMeta({
         </dt>
         <dd className="mt-1 font-medium">{ticket.holder_name ?? "—"}</dd>
       </div>
-      {ticket.category && (
+      {ticket.tier && (
         <div>
           <dt className="text-xs uppercase tracking-wider text-[var(--color-fg-muted)]">
-            {ticket.category}
+            {t("tier")}
           </dt>
+          <dd className="mt-1 font-medium">
+            {TIER_LABEL[ticket.tier]}
+            {ticket.order_no ? ` · ${ticket.order_no}` : ""}
+          </dd>
         </div>
       )}
     </dl>

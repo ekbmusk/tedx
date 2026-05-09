@@ -1,3 +1,18 @@
+export const TIERS = ["pre-sale", "vip", "standard"] as const;
+export type Tier = (typeof TIERS)[number];
+
+export const TIER_LABEL: Record<Tier, string> = {
+  "pre-sale": "PRE-SALE",
+  vip: "VIP",
+  standard: "STANDARD",
+};
+
+export const TIER_PREFIX: Record<Tier, string> = {
+  "pre-sale": "PS",
+  vip: "VIP",
+  standard: "ST",
+};
+
 export type SocialKind =
   | "instagram"
   | "facebook"

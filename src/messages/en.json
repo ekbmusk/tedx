@@ -53,7 +53,9 @@
     "notFoundTitle": "Ticket not found",
     "notFoundBody": "The link may be invalid. Please contact the manager.",
     "name": "Holder",
-    "saveScreenshot": "Save a screenshot"
+    "saveScreenshot": "Save a screenshot",
+    "downloadPdf": "Download PDF ticket",
+    "tier": "Tier"
   },
   "admin": {
     "loginTitle": "Manager sign in",
@@ -77,15 +79,25 @@
       "holder": "Holder",
       "status": "Status",
       "category": "Category",
+      "tier": "Tier",
+      "orderNo": "№",
       "created": "Issued at",
       "actions": "Actions"
     },
     "newTicket": {
       "title": "Create a new ticket",
+      "tier": "Tier",
+      "tierHelp": "Choose the ticket type",
       "category": "Category (optional)",
       "note": "Internal note",
       "create": "Create",
-      "linkReady": "Link is ready — send it to the buyer"
+      "linkReady": "Link is ready — send it to the buyer",
+      "orderReady": "Order number"
+    },
+    "tierOptions": {
+      "pre-sale": "PRE-SALE — 50 seats",
+      "vip": "VIP — priority entry",
+      "standard": "STANDARD — general"
     },
     "scanner": {
       "title": "QR scanner",

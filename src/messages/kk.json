@@ -53,7 +53,9 @@
     "notFoundTitle": "Билет табылмады",
     "notFoundBody": "Сілтеме жарамсыз болуы мүмкін. Менеджермен байланысыңыз.",
     "name": "Иесі",
-    "saveScreenshot": "Скриншот сақтаңыз"
+    "saveScreenshot": "Скриншот сақтаңыз",
+    "downloadPdf": "Билет PDF жүктеу",
+    "tier": "Санат"
   },
   "admin": {
     "loginTitle": "Менеджер кірісі",
@@ -77,15 +79,25 @@
       "holder": "Иесі",
       "status": "Статус",
       "category": "Санат",
+      "tier": "Санат",
+      "orderNo": "№",
       "created": "Берілген күні",
       "actions": "Әрекеттер"
     },
     "newTicket": {
       "title": "Жаңа билет жасау",
+      "tier": "Санат",
+      "tierHelp": "Билет түрін таңдаңыз",
       "category": "Санат (міндетті емес)",
       "note": "Ішкі ескертпе",
       "create": "Жасау",
-      "linkReady": "Сілтеме дайын — клиентке жіберіңіз"
+      "linkReady": "Сілтеме дайын — клиентке жіберіңіз",
+      "orderReady": "Билет нөмірі"
+    },
+    "tierOptions": {
+      "pre-sale": "PRE-SALE — 50 орын",
+      "vip": "VIP — басымды кіру",
+      "standard": "STANDARD — жалпы"
     },
     "scanner": {
       "title": "QR сканер",
