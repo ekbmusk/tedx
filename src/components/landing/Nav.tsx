@@ -45,6 +45,9 @@ export function Nav({ buyHref }: { buyHref: string }) {
           <a href="#venue" className="hover:text-white transition-colors">
             {t("venue")}
           </a>
+          <a href="#faq" className="hover:text-white transition-colors">
+            {t("faq")}
+          </a>
         </nav>
         <div className="flex items-center gap-2 md:gap-3">
           <MyTicketLink />
