@@ -11,6 +11,7 @@
     "@pdf-lib/fontkit": "^1.1.1",
     "@supabase/ssr": "^0.10.3",
     "@supabase/supabase-js": "^2.105.4",
+    "@vercel/analytics": "^2.0.1",
     "html5-qrcode": "^2.3.8",
     "nanoid": "^5.1.11",
     "next": "16.2.6",
