@@ -3,6 +3,7 @@ import { Resend } from "resend";
 import { event } from "@/config/event";
 import { TIER_LABEL, type Tier } from "@/config/event";
 import { generateTicketPdf } from "@/lib/pdf";
+import { rasterizePdfFirstPage } from "@/lib/pdf-render";
 
 // Lazy client — Resend constructor throws on missing key, which would fail
 // `next build` during page-data collection on environments without the key.
@@ -40,7 +41,13 @@ export async function sendTicketActivatedEmail(args: TicketEmailArgs) {
   if (!isEmail(args.to)) return;
 
   try {
-    const attachments = [];
+    const attachments: {
+      filename: string;
+      content: string;
+      content_id?: string;
+    }[] = [];
+    let hasInlinePreview = false;
+
     if (args.tier && args.orderNo) {
       const pdf = await generateTicketPdf({
         tier: args.tier,
@@ -52,13 +59,27 @@ export async function sendTicketActivatedEmail(args: TicketEmailArgs) {
         filename: `TEDxZhenysPark-${args.orderNo}.pdf`,
         content: Buffer.from(pdf).toString("base64"),
       });
+
+      // Best-effort PNG rasterization of the PDF for inline preview.
+      // If it fails, the email still sends with just the PDF attachment.
+      try {
+        const png = await rasterizePdfFirstPage(pdf, 2);
+        attachments.push({
+          filename: "ticket.png",
+          content: png.toString("base64"),
+          content_id: "ticket-preview",
+        });
+        hasInlinePreview = true;
+      } catch (e) {
+        console.error("[email] rasterizePdfFirstPage failed:", e);
+      }
     }
 
     await resend.emails.send({
       from: FROM,
       to: args.to,
       subject: "TEDxZhenysPark — билетіңіз дайын / your ticket is ready",
-      html: ticketHtml(args),
+      html: ticketHtml(args, hasInlinePreview),
       attachments,
     });
   } catch (e) {
@@ -121,36 +142,20 @@ const wrapper = (body: string) => `<!doctype html>
 </body>
 </html>`;
 
-function ticketHtml(args: TicketEmailArgs) {
+function ticketHtml(args: TicketEmailArgs, hasInlinePreview: boolean) {
   const tierLabel = args.tier ? TIER_LABEL[args.tier] : "—";
   const order = args.orderNo ?? "—";
   const ticketUrl = `${SITE}/t/${args.token}`;
   const calendarUrl = `${SITE}/calendar.ics`;
 
-  return wrapper(`
-    <h1 style="margin:24px 0 8px;font-size:28px;font-weight:800;line-height:1.1;">
-      Билетіңіз дайын<br><span style="color:#8a8a8a;font-size:18px;font-weight:600;">Your ticket is ready</span>
-    </h1>
-    <p style="margin:8px 0 20px;color:#8a8a8a;font-size:15px;line-height:1.5;">
-      ${escape(args.holderName)}, ${event.dateLabel.kk} күні ${event.venue.kk}-ға күтеміз.<br>
-      ${escape(args.holderName)}, see you on ${event.dateLabel.en} at ${event.venue.en}.
-    </p>
-
-    <p style="margin:0 0 20px;color:#f5f5f5;font-size:14px;line-height:1.55;">
-      <strong>PDF-билетті құрылғыңызға сақтап қойыңыз</strong> — кіру кезінде QR-код керек болады.<br>
-      <strong style="color:#8a8a8a;">We recommend saving the attached PDF ticket to your device</strong> — you'll need the QR at the entrance.
-    </p>
-
-    <p style="margin:0 0 24px;">
-      <a href="${ticketUrl}" style="display:inline-block;background:#e62b1e;color:#fff;text-decoration:none;padding:8px 16px;border-radius:999px;font-weight:600;font-size:13px;">
-        Сайтта ашу · Open on site
-      </a>
-      <a href="${calendarUrl}" style="display:inline-block;margin-left:6px;border:1px solid #1f1f1f;color:#fff;text-decoration:none;padding:8px 16px;border-radius:999px;font-weight:600;font-size:13px;">
-        Күнтізбеге қосу · Add to calendar
-      </a>
-    </p>
-
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0;border:1px solid #1f1f1f;border-radius:12px;">
+  const previewBlock = hasInlinePreview
+    ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;">
+      <tr><td align="center">
+        <img src="cid:ticket-preview" alt="Сіздің билетіңіз · Your ticket"
+             style="display:block;max-width:100%;width:100%;height:auto;border-radius:14px;border:1px solid #1f1f1f;" />
+      </td></tr>
+    </table>`
+    : `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;border:1px solid #1f1f1f;border-radius:12px;">
       <tr><td style="padding:14px 18px;border-bottom:1px solid #1f1f1f;font-size:13px;">
         <div style="color:#8a8a8a;font-size:11px;text-transform:uppercase;letter-spacing:0.1em;">Tier</div>
         <div style="margin-top:4px;font-weight:700;">${tierLabel} · ${order}</div>
@@ -163,7 +168,32 @@ function ticketHtml(args: TicketEmailArgs) {
         <div style="color:#8a8a8a;font-size:11px;text-transform:uppercase;letter-spacing:0.1em;">Орын · Venue</div>
         <div style="margin-top:4px;font-weight:700;">${event.venue.kk}, ${event.city.kk}</div>
       </td></tr>
-    </table>
+    </table>`;
+
+  return wrapper(`
+    <h1 style="margin:24px 0 8px;font-size:28px;font-weight:800;line-height:1.1;">
+      Билетіңіз дайын<br><span style="color:#8a8a8a;font-size:18px;font-weight:600;">Your ticket is ready</span>
+    </h1>
+    <p style="margin:8px 0 20px;color:#8a8a8a;font-size:15px;line-height:1.5;">
+      ${escape(args.holderName)}, ${event.dateLabel.kk} күні ${event.venue.kk}-ға күтеміз.<br>
+      ${escape(args.holderName)}, see you on ${event.dateLabel.en} at ${event.venue.en}.
+    </p>
+
+    ${previewBlock}
+
+    <p style="margin:0 0 20px;color:#f5f5f5;font-size:14px;line-height:1.55;">
+      <strong>PDF-билетті құрылғыңызға сақтап қойыңыз</strong> — кіру кезінде QR-код керек болады.<br>
+      <strong style="color:#8a8a8a;">We recommend saving the attached PDF ticket to your device</strong> — you'll need the QR at the entrance.
+    </p>
+
+    <p style="margin:0;">
+      <a href="${ticketUrl}" style="display:inline-block;background:#e62b1e;color:#fff;text-decoration:none;padding:8px 16px;border-radius:999px;font-weight:600;font-size:13px;">
+        Сайтта ашу · Open on site
+      </a>
+      <a href="${calendarUrl}" style="display:inline-block;margin-left:6px;border:1px solid #1f1f1f;color:#fff;text-decoration:none;padding:8px 16px;border-radius:999px;font-weight:600;font-size:13px;">
+        Күнтізбеге қосу · Add to calendar
+      </a>
+    </p>
   `);
 }
 

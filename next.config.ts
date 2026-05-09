@@ -8,6 +8,10 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.resolve(__dirname),
   },
+  // @napi-rs/canvas ships native .node bindings; let Next leave them
+  // outside the bundle and require() at runtime. pdfjs-dist plays nicer
+  // when imported alongside an external canvas.
+  serverExternalPackages: ["@napi-rs/canvas", "pdfjs-dist"],
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "tedturkestan.lovable.app" },
