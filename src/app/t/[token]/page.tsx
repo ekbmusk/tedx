@@ -32,16 +32,20 @@ async function getTicket(token: string): Promise<TicketRow | null> {
 
 export default async function TicketPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ token: string }>;
+  searchParams: Promise<{ lang?: string }>;
 }) {
   const { token } = await params;
-  const t = await getTranslations("ticket");
+  const sp = await searchParams;
+  const locale: "kk" | "en" = sp.lang === "en" ? "en" : "kk";
+  const t = await getTranslations({ locale, namespace: "ticket" });
   const ticket = await getTicket(token);
 
   if (!ticket) {
     return (
-      <Frame>
+      <Frame locale={locale}>
         <h1 className="font-display text-3xl font-extrabold">
           {t("notFoundTitle")}
         </h1>
@@ -52,7 +56,7 @@ export default async function TicketPage({
 
   if (ticket.status === "issued") {
     return (
-      <Frame>
+      <Frame locale={locale}>
         <Header step="01" title={t("issuedTitle")} body={t("issuedBody")} />
         <div className="mt-8">
           <ActivationForm token={token} />
@@ -63,7 +67,7 @@ export default async function TicketPage({
 
   if (ticket.status === "used") {
     return (
-      <Frame>
+      <Frame locale={locale}>
         <RememberTicket token={token} />
         <h1 className="font-display text-3xl font-extrabold text-[var(--color-fg-muted)]">
           {t("usedTitle")}
@@ -84,7 +88,7 @@ export default async function TicketPage({
 
   // activated
   return (
-    <Frame>
+    <Frame locale={locale}>
       <RememberTicket token={token} />
       <Header step="✓" title={t("activatedTitle")} body={t("activatedBody")} />
       <div className="mt-8 flex flex-col gap-3">
@@ -151,20 +155,27 @@ function BackToSiteButton({ label }: { label: string }) {
   );
 }
 
-function Frame({ children }: { children: React.ReactNode }) {
+function Frame({
+  children,
+  locale,
+}: {
+  children: React.ReactNode;
+  locale: "kk" | "en";
+}) {
   return (
-    <main className="min-h-dvh bg-[var(--color-bg)] px-5 py-12 text-[var(--color-fg)]">
+    <main className="ticket-page min-h-dvh bg-[var(--color-bg)] px-5 py-12 text-[var(--color-fg)]">
       <div className="mx-auto max-w-md">
         <img
           src="/brand/wordmark.svg"
           alt="TEDxZhenysPark"
-          className="mb-8 h-5 w-auto"
+          className="ticket-brand mb-8 h-5 w-auto"
         />
-        <div className="rounded-2xl border border-[var(--color-line)] bg-[var(--color-bg-soft)] p-6 md:p-8">
+        <div className="ticket-card rounded-2xl border border-[var(--color-line)] bg-[var(--color-bg-soft)] p-6 md:p-8">
           {children}
         </div>
-        <div className="mt-6 text-center text-xs text-[var(--color-fg-muted)]">
-          {event.dateLabel.kk} · {event.venue.kk}, {event.city.kk}
+        <div className="ticket-footer mt-6 text-center text-xs text-[var(--color-fg-muted)]">
+          {event.dateLabel[locale]} · {event.venue[locale]},{" "}
+          {event.city[locale]}
         </div>
       </div>
     </main>

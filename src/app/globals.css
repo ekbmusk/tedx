@@ -49,3 +49,40 @@ body {
 .marquee-track {
   animation: marquee 40s linear infinite;
 }
+
+/* ── Print: clean ticket badge with QR, name, tier, venue ─────────────── */
+@media print {
+  /* white paper, black ink */
+  html, body, .ticket-page {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  /* hide chrome that doesn't belong on paper */
+  .ticket-page a[href="/"],
+  .ticket-page a[href="/calendar.ics"],
+  .ticket-page a[download] {
+    display: none !important;
+  }
+  /* lift card frame to plain layout */
+  .ticket-page .ticket-card {
+    background: #fff !important;
+    border: none !important;
+    padding: 0 !important;
+  }
+  .ticket-page .ticket-brand {
+    filter: invert(1);
+  }
+  .ticket-page .ticket-footer {
+    color: #444 !important;
+  }
+  /* QR stays sharp */
+  .ticket-page canvas {
+    image-rendering: pixelated;
+  }
+  /* hide marquees, nav, footer if any */
+  .marquee-track,
+  header[class*="fixed"],
+  footer {
+    display: none !important;
+  }
+}
