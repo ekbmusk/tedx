@@ -99,9 +99,11 @@ function Frame({ children }: { children: React.ReactNode }) {
   return (
     <main className="min-h-dvh bg-[var(--color-bg)] px-5 py-12 text-[var(--color-fg)]">
       <div className="mx-auto max-w-md">
-        <div className="tedx-mark mb-8 font-display text-lg font-black tracking-tight">
-          TED<span>x</span>ZhenysPark
-        </div>
+        <img
+          src="/brand/wordmark.svg"
+          alt="TEDxZhenysPark"
+          className="mb-8 h-5 w-auto"
+        />
         <div className="rounded-2xl border border-[var(--color-line)] bg-[var(--color-bg-soft)] p-6 md:p-8">
           {children}
         </div>

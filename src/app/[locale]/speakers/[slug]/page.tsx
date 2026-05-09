@@ -46,11 +46,12 @@ export default async function SpeakerPage({
       {/* Top bar */}
       <header className="border-b border-[var(--color-line)]">
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3 md:px-10 md:py-4">
-          <Link
-            href="/"
-            className="tedx-mark font-display text-base font-black tracking-tight md:text-xl"
-          >
-            TED<span>x</span>ZhenysPark
+          <Link href="/" className="flex items-center">
+            <img
+              src="/brand/wordmark.svg"
+              alt="TEDxZhenysPark"
+              className="h-5 w-auto md:h-6"
+            />
           </Link>
           <Link
             href="/#speakers"

@@ -16,6 +16,7 @@ export function SpeakerCard({
     .slice(0, 2)
     .map((s) => s[0])
     .join("");
+  const readMore = locale === "kk" ? "Толығырақ" : "Read more";
 
   return (
     <Link
@@ -42,13 +43,21 @@ export function SpeakerCard({
           {String(index + 1).padStart(2, "0")}
         </div>
       </div>
-      <div className="flex flex-col gap-1 p-5">
-        <h3 className="font-display text-lg font-bold leading-tight transition-colors group-hover:text-[var(--color-red)]">
-          {speaker.name[locale]}
-        </h3>
-        <p className="text-sm leading-snug text-[var(--color-fg-muted)]">
-          {speaker.title[locale]}
-        </p>
+      <div className="flex flex-col gap-3 p-5">
+        <div className="flex flex-col gap-1">
+          <h3 className="font-display text-lg font-bold leading-tight transition-colors group-hover:text-[var(--color-red)]">
+            {speaker.name[locale]}
+          </h3>
+          <p className="text-sm leading-snug text-[var(--color-fg-muted)]">
+            {speaker.title[locale]}
+          </p>
+        </div>
+        <span className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--color-red)] transition-all group-hover:gap-2">
+          {readMore}
+          <span aria-hidden className="text-base leading-none">
+            →
+          </span>
+        </span>
       </div>
     </Link>
   );

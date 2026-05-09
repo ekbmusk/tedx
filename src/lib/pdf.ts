@@ -15,22 +15,28 @@ const TIER_PAGE: Record<Tier, number> = {
  * Layout in PDF points (1pt = 1/72").
  * Origin is the bottom-left of the page.
  * Template page size: 306.1 × 544.3 pt.
+ *
+ * Calibrated against the template's preprinted slots (see scripts/probe-grid.ts):
+ *   - thick HOLDER underline at y≈140
+ *   - thin ORDER underline at y≈92, "Nº" preprint at x≈22-55 baseline y≈100
+ *   - "Türkistan" + "@tedxzhenys.park" preprint occupy bottom-right (y<70, x>240)
+ * QR therefore goes into the empty pocket between the two underlines on the right.
  */
 const LAYOUT = {
   qr: {
     rightMargin: 8,
-    bottomMargin: 4,
-    size: 56,
-    padding: 6,
+    bottomY: 84,
+    size: 60,
+    padding: 2,
   },
   holder: {
     leftMargin: 22,
-    bottomFromBottom: 134,
+    bottomFromBottom: 144,
     size: 13,
   },
   order: {
-    leftMargin: 47,
-    bottomFromBottom: 96,
+    leftMargin: 50,
+    bottomFromBottom: 100,
     size: 13,
   },
 };
@@ -97,7 +103,7 @@ export async function generateTicketPdf(args: {
 
   // ── QR (always on white pad, ensures contrast on VIP/STANDARD) ─────────
   const qrX = width - LAYOUT.qr.rightMargin - LAYOUT.qr.size;
-  const qrY = LAYOUT.qr.bottomMargin;
+  const qrY = LAYOUT.qr.bottomY;
   page.drawRectangle({
     x: qrX - LAYOUT.qr.padding,
     y: qrY - LAYOUT.qr.padding,

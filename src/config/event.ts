@@ -68,8 +68,8 @@ export const event: EventConfig = {
     en: "May 30, 2026",
   },
   venue: {
-    kk: "Caravan Saray Arena",
-    en: "Caravan Saray Arena",
+    kk: "Karavansaray Arena",
+    en: "Karavansaray Arena",
   },
   city: {
     kk: "Түркістан",
@@ -235,7 +235,7 @@ export const contacts = {
 
 export function eventMapUrl() {
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-    "Caravan Saray Arena, Türkistan, Kazakhstan",
+    "Karavansaray Arena, Türkistan, Kazakhstan",
   )}`;
 }
 

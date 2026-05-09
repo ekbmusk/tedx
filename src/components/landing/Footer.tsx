@@ -9,9 +9,11 @@ export async function Footer() {
     <footer className="bg-black py-12 md:py-16">
       <div className="mx-auto grid max-w-7xl gap-8 px-5 md:grid-cols-[2fr_1fr_1fr] md:gap-10 md:px-10">
         <div>
-          <div className="tedx-mark font-display text-2xl font-black md:text-3xl">
-            TED<span>x</span>ZhenysPark
-          </div>
+          <img
+            src="/brand/wordmark.svg"
+            alt="TEDxZhenysPark"
+            className="h-7 w-auto md:h-9"
+          />
           <p className="mt-3 max-w-sm text-xs uppercase tracking-wider text-[var(--color-fg-muted)] md:text-sm">
             {t("tagline")}
           </p>

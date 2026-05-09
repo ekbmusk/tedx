@@ -18,7 +18,7 @@ const display = Inter_Tight({
 export const metadata: Metadata = {
   title: "TEDxZhenysPark — Жаңғыру",
   description:
-    "TEDxZhenysPark — Түркістандағы тәуелсіз TED іс-шарасы. 30 мамыр 2026, Caravan Saray Arena.",
+    "TEDxZhenysPark — Түркістандағы тәуелсіз TED іс-шарасы. 30 мамыр 2026, Karavansaray Arena.",
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
   ),

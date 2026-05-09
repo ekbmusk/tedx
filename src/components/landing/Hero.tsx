@@ -39,8 +39,14 @@ export async function Hero({
       />
 
       <div className="relative mx-auto max-w-7xl px-5 md:px-10">
-        <p className="mb-5 text-[10px] uppercase tracking-[0.3em] text-[var(--color-fg-muted)] md:mb-8 md:text-xs">
-          {t("kicker")}
+        <p className="mb-5 flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] text-[var(--color-fg-muted)] md:mb-8 md:gap-4 md:text-xs">
+          <img
+            src="/brand/wordmark.svg"
+            alt="TEDxZhenysPark"
+            className="h-4 w-auto md:h-5"
+          />
+          <span aria-hidden>·</span>
+          <span>{event.city[locale]}</span>
         </p>
 
         <h1 className="font-display text-[15vw] font-black uppercase leading-[0.88] md:text-[180px]">

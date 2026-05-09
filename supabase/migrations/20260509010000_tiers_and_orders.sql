@@ -3,10 +3,10 @@
 -- Existing rows get tier=null, order_no=null and stay backwards-compatible.
 
 alter table public.tickets
-  add column tier text check (tier in ('pre-sale','vip','standard')),
-  add column order_no text;
+  add column if not exists tier text check (tier in ('pre-sale','vip','standard')),
+  add column if not exists order_no text;
 
-create unique index tickets_order_no_idx on public.tickets(order_no);
+create unique index if not exists tickets_order_no_idx on public.tickets(order_no);
 
 create sequence if not exists tickets_seq_pre_sale;
 create sequence if not exists tickets_seq_vip;
@@ -41,8 +41,10 @@ $$;
 revoke all on function public.next_order_no(text) from public;
 grant execute on function public.next_order_no(text) to authenticated;
 
--- Extend get_ticket_by_token to return tier and order_no
-create or replace function public.get_ticket_by_token(p_token text)
+-- Extend get_ticket_by_token to return tier and order_no.
+-- Return type changed → must DROP first (CREATE OR REPLACE refuses signature changes).
+drop function if exists public.get_ticket_by_token(text);
+create function public.get_ticket_by_token(p_token text)
 returns table(
   id uuid,
   token text,
@@ -63,3 +65,4 @@ as $$
   from public.tickets
   where token = p_token;
 $$;
+grant execute on function public.get_ticket_by_token(text) to anon, authenticated;

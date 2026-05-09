@@ -24,11 +24,12 @@ export function Nav({ buyHref }: { buyHref: string }) {
       }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 md:px-10 md:py-4">
-        <Link
-          href="/"
-          className="tedx-mark font-display text-base font-black tracking-tight md:text-xl"
-        >
-          TED<span>x</span>ZhenysPark
+        <Link href="/" className="flex items-center">
+          <img
+            src="/brand/wordmark.svg"
+            alt="TEDxZhenysPark"
+            className="h-5 w-auto md:h-6"
+          />
         </Link>
         <nav className="hidden items-center gap-8 text-sm text-[var(--color-fg-muted)] md:flex">
           <a href="#theme" className="hover:text-white transition-colors">

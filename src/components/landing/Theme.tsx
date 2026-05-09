@@ -26,15 +26,52 @@ export async function Theme() {
         <div className="marquee-track flex w-max gap-8 whitespace-nowrap font-display text-2xl font-black uppercase text-white/10 md:gap-12 md:text-5xl">
           {Array.from({ length: 2 }).map((_, i) => (
             <span key={i} className="flex items-center gap-8 md:gap-12">
-              {[t("title"), "·", "Renewal", "·", t("title"), "·", "Жаңғыру", "·"].map(
-                (w, j) => (
-                  <span key={j}>{w}</span>
-                ),
-              )}
+              {[
+                "Жаңғыру",
+                "·",
+                "Renewal",
+                "·",
+                "Возрождение",
+                "·",
+                "Renaissance",
+                "·",
+                "Yenilenme",
+                "·",
+                "复兴",
+                "·",
+                "재생",
+                "·",
+              ].map((w, j) => (
+                <span key={j}>{w}</span>
+              ))}
             </span>
+          ))}
+        </div>
+      </div>
+
+      {/* sponsors marquee */}
+      <div className="overflow-hidden border-b border-[var(--color-line)] py-6 md:py-8">
+        <div className="marquee-track flex w-max items-center gap-12 whitespace-nowrap md:gap-20">
+          {Array.from({ length: 2 }).map((_, i) => (
+            <div key={i} className="flex items-center gap-12 md:gap-20">
+              {SPONSORS.map((s) => (
+                <img
+                  key={s.src}
+                  src={s.src}
+                  alt={s.alt}
+                  className={`${s.className} w-auto opacity-80`}
+                />
+              ))}
+            </div>
           ))}
         </div>
       </div>
     </section>
   );
 }
+
+const SPONSORS = [
+  { src: "/sponsors/logo-2.svg", alt: "TEDx", className: "h-12 md:h-16" },
+  { src: "/sponsors/simba.svg", alt: "Simba", className: "h-8 md:h-12" },
+  { src: "/sponsors/dailyfood.jpg", alt: "Daily Food", className: "h-16 md:h-24 rounded-md" },
+];
