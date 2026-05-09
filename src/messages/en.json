@@ -58,7 +58,8 @@
     "downloadPdf": "Download PDF ticket",
     "tier": "Tier",
     "backToSite": "Back to site",
-    "yourZone": "Your zone"
+    "yourZone": "Your zone",
+    "addToCalendar": "Add to calendar"
   },
   "admin": {
     "loginTitle": "Manager sign in",

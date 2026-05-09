@@ -58,7 +58,8 @@
     "downloadPdf": "Билет PDF жүктеу",
     "tier": "Санат",
     "backToSite": "Сайтқа оралу",
-    "yourZone": "Сіздің зонаңыз"
+    "yourZone": "Сіздің зонаңыз",
+    "addToCalendar": "Күнтізбеге қосу"
   },
   "admin": {
     "loginTitle": "Менеджер кірісі",

@@ -95,11 +95,35 @@ export default async function TicketPage({
           {t("saveScreenshot")}
         </p>
         <DownloadPdfButton token={token} orderNo={ticket.order_no} />
+        <AddToCalendarButton label={t("addToCalendar")} />
         <BackToSiteButton label={t("backToSite")} />
       </div>
       <TicketMeta ticket={ticket} t={t} />
       <VenueMapSection tier={ticket.tier} title={t("yourZone")} />
     </Frame>
+  );
+}
+
+function AddToCalendarButton({ label }: { label: string }) {
+  return (
+    <a
+      href="/calendar.ics"
+      download="tedxzhenyspark.ics"
+      className="flex w-full items-center justify-center gap-2 rounded-full border border-[var(--color-line)] px-6 py-3 text-base font-semibold text-white transition-colors hover:border-white"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        className="h-5 w-5"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        aria-hidden
+      >
+        <rect x="3" y="5" width="18" height="16" rx="2" strokeLinejoin="round" />
+        <path d="M3 9h18M8 3v4M16 3v4" strokeLinecap="round" />
+      </svg>
+      {label}
+    </a>
   );
 }
 
