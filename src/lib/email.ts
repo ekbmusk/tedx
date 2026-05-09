@@ -126,47 +126,31 @@ function ticketHtml(args: TicketEmailArgs) {
   const order = args.orderNo ?? "—";
   const ticketUrl = `${SITE}/t/${args.token}`;
   const calendarUrl = `${SITE}/calendar.ics`;
-  const hasPdf = !!(args.tier && args.orderNo);
-  const pdfFilename = args.orderNo ? `TEDxZhenysPark-${args.orderNo}.pdf` : null;
 
   return wrapper(`
     <h1 style="margin:24px 0 8px;font-size:28px;font-weight:800;line-height:1.1;">
       Билетіңіз дайын<br><span style="color:#8a8a8a;font-size:18px;font-weight:600;">Your ticket is ready</span>
     </h1>
-    <p style="margin:8px 0 24px;color:#8a8a8a;font-size:15px;line-height:1.5;">
+    <p style="margin:8px 0 20px;color:#8a8a8a;font-size:15px;line-height:1.5;">
       ${escape(args.holderName)}, ${event.dateLabel.kk} күні ${event.venue.kk}-ға күтеміз.<br>
       ${escape(args.holderName)}, see you on ${event.dateLabel.en} at ${event.venue.en}.
     </p>
 
-    ${
-      hasPdf
-        ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;background:#1a0a08;border:1px solid #e62b1e;border-radius:12px;">
-      <tr><td style="padding:18px 20px;">
-        <table role="presentation" cellpadding="0" cellspacing="0">
-          <tr>
-            <td style="padding-right:14px;vertical-align:top;">
-              <div style="width:40px;height:40px;background:#e62b1e;border-radius:8px;text-align:center;line-height:40px;font-size:22px;">📎</div>
-            </td>
-            <td style="vertical-align:top;">
-              <div style="font-weight:800;font-size:15px;color:#fff;letter-spacing:0.04em;text-transform:uppercase;">
-                Билет PDF қосылған
-              </div>
-              <div style="margin-top:2px;font-weight:700;font-size:14px;color:#f5f5f5;">
-                Ticket PDF attached${pdfFilename ? ` · <span style="font-family:ui-monospace,Menlo,Consolas,monospace;color:#e62b1e;">${pdfFilename}</span>` : ""}
-              </div>
-              <div style="margin-top:8px;font-size:13px;color:#c8c8c8;line-height:1.5;">
-                Кіру кезінде осы PDF-тегі QR-кодты волонтёрге көрсетіңіз.<br>
-                Show the QR code from the attached PDF at the entrance.
-              </div>
-            </td>
-          </tr>
-        </table>
-      </td></tr>
-    </table>`
-        : ""
-    }
+    <p style="margin:0 0 20px;color:#f5f5f5;font-size:14px;line-height:1.55;">
+      <strong>PDF-билетті құрылғыңызға сақтап қойыңыз</strong> — кіру кезінде QR-код керек болады.<br>
+      <strong style="color:#8a8a8a;">We recommend saving the attached PDF ticket to your device</strong> — you'll need the QR at the entrance.
+    </p>
 
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;border:1px solid #1f1f1f;border-radius:12px;">
+    <p style="margin:0 0 24px;">
+      <a href="${ticketUrl}" style="display:inline-block;background:#e62b1e;color:#fff;text-decoration:none;padding:8px 16px;border-radius:999px;font-weight:600;font-size:13px;">
+        Сайтта ашу · Open on site
+      </a>
+      <a href="${calendarUrl}" style="display:inline-block;margin-left:6px;border:1px solid #1f1f1f;color:#fff;text-decoration:none;padding:8px 16px;border-radius:999px;font-weight:600;font-size:13px;">
+        Күнтізбеге қосу · Add to calendar
+      </a>
+    </p>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0;border:1px solid #1f1f1f;border-radius:12px;">
       <tr><td style="padding:14px 18px;border-bottom:1px solid #1f1f1f;font-size:13px;">
         <div style="color:#8a8a8a;font-size:11px;text-transform:uppercase;letter-spacing:0.1em;">Tier</div>
         <div style="margin-top:4px;font-weight:700;">${tierLabel} · ${order}</div>
@@ -180,12 +164,6 @@ function ticketHtml(args: TicketEmailArgs) {
         <div style="margin-top:4px;font-weight:700;">${event.venue.kk}, ${event.city.kk}</div>
       </td></tr>
     </table>
-    <a href="${ticketUrl}" style="display:inline-block;background:#e62b1e;color:#fff;text-decoration:none;padding:14px 24px;border-radius:999px;font-weight:700;font-size:15px;">
-      Билетті ашу · Open ticket
-    </a>
-    <a href="${calendarUrl}" style="display:inline-block;margin-left:8px;border:1px solid #1f1f1f;color:#fff;text-decoration:none;padding:14px 24px;border-radius:999px;font-weight:700;font-size:15px;">
-      Күнтізбе · Calendar
-    </a>
   `);
 }
 
