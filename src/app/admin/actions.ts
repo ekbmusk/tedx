@@ -60,10 +60,11 @@ export async function createTicket(formData: FormData) {
   };
 }
 
-export async function checkInTicket(token: string) {
+export async function checkInTicket(token: string, door?: string | null) {
   const supabase = await createClient();
   const { data, error } = await supabase.rpc("check_in_ticket", {
     p_token: token,
+    p_door: door ?? null,
   });
   if (error) return { ok: false as const, error: error.message };
   const row = Array.isArray(data) ? data[0] : data;
@@ -74,5 +75,8 @@ export async function checkInTicket(token: string) {
     prevStatus: row.prev_status as "issued" | "activated" | "used",
     holderName: row.holder_name as string | null,
     category: row.category as string | null,
+    tier: row.tier as string | null,
+    orderNo: row.order_no as string | null,
+    door: row.door as string | null,
   };
 }

@@ -42,3 +42,6 @@ next-env.d.ts
 
 # generated test PDFs
 /tmp/
+
+# venue planning materials (source for src/components/ticket/VenueMap.tsx)
+/map/

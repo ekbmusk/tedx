@@ -4,7 +4,8 @@
     "theme": "Theme",
     "about": "About TEDx",
     "venue": "Venue",
-    "buyTicket": "Get a ticket"
+    "buyTicket": "Get a ticket",
+    "myTicket": "My ticket"
   },
   "hero": {
     "kicker": "TEDxZhenysPark · Turkestan",
@@ -55,7 +56,9 @@
     "name": "Holder",
     "saveScreenshot": "Save a screenshot",
     "downloadPdf": "Download PDF ticket",
-    "tier": "Tier"
+    "tier": "Tier",
+    "backToSite": "Back to site",
+    "yourZone": "Your zone"
   },
   "admin": {
     "loginTitle": "Manager sign in",
@@ -66,6 +69,7 @@
     "tickets": "Tickets",
     "create": "New ticket",
     "scan": "QR scanner",
+    "monitorNav": "Monitor",
     "copy": "Copy link",
     "copied": "Copied",
     "openInWhatsapp": "Open in WhatsApp",
@@ -106,7 +110,20 @@
       "notActivated": "Ticket has not been activated yet",
       "notFound": "Ticket not found",
       "scanAgain": "Scan again",
-      "permission": "Please grant camera permission"
+      "permission": "Please grant camera permission",
+      "doorLabel": "Door",
+      "pickDoor": "Pick a door"
+    },
+    "monitor": {
+      "title": "Door monitor",
+      "autoRefresh": "Refreshes every 7 seconds",
+      "entered": "Entered",
+      "issued": "Issued",
+      "activated": "Activated",
+      "used": "Used",
+      "byDoor": "By door",
+      "door": "Door",
+      "doorUnknown": "Unknown"
     }
   }
 }

@@ -26,6 +26,9 @@ export function AdminNav({ email }: { email: string }) {
             <Link href="/admin/scan" className="hover:text-[var(--color-red)]">
               {t("scan")}
             </Link>
+            <Link href="/admin/monitor" className="hover:text-[var(--color-red)]">
+              {t("monitorNav")}
+            </Link>
           </nav>
         </div>
         <form action={signOut} className="flex items-center gap-3">

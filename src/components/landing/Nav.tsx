@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { useEffect, useState } from "react";
+import { MyTicketLink } from "./MyTicketLink";
 
 export function Nav({ buyHref }: { buyHref: string }) {
   const t = useTranslations("nav");
@@ -28,7 +29,7 @@ export function Nav({ buyHref }: { buyHref: string }) {
           <img
             src="/brand/wordmark.svg"
             alt="TEDxZhenysPark"
-            className="h-5 w-auto md:h-6"
+            className="h-4 w-auto md:h-6"
           />
         </Link>
         <nav className="hidden items-center gap-8 text-sm text-[var(--color-fg-muted)] md:flex">
@@ -46,6 +47,7 @@ export function Nav({ buyHref }: { buyHref: string }) {
           </a>
         </nav>
         <div className="flex items-center gap-2 md:gap-3">
+          <MyTicketLink />
           <LangSwitcher />
           <a
             href={buyHref}

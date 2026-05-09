@@ -4,6 +4,8 @@ import { event, TIER_LABEL, type Tier } from "@/config/event";
 import { ActivationForm } from "@/components/ticket/ActivationForm";
 import { QrDisplay } from "@/components/ticket/QrDisplay";
 import { DownloadPdfButton } from "@/components/ticket/DownloadPdfButton";
+import { RememberTicket } from "@/components/ticket/RememberTicket";
+import { VenueMap } from "@/components/ticket/VenueMap";
 
 type TicketRow = {
   id: string;
@@ -62,17 +64,20 @@ export default async function TicketPage({
   if (ticket.status === "used") {
     return (
       <Frame>
+        <RememberTicket token={token} />
         <h1 className="font-display text-3xl font-extrabold text-[var(--color-fg-muted)]">
           {t("usedTitle")}
         </h1>
         <p className="mt-3 text-[var(--color-fg-muted)]">{t("usedBody")}</p>
-        <div className="mt-6 flex flex-col items-center gap-4">
-          <QrDisplay value={token} />
-          {ticket.tier && ticket.order_no && (
-            <DownloadPdfButton token={token} orderNo={ticket.order_no} />
-          )}
+        <div className="mt-6 flex flex-col gap-3">
+          <div className="self-center">
+            <QrDisplay value={token} />
+          </div>
+          <DownloadPdfButton token={token} orderNo={ticket.order_no} />
+          <BackToSiteButton label={t("backToSite")} />
         </div>
         <TicketMeta ticket={ticket} t={t} />
+        <VenueMapSection tier={ticket.tier} title={t("yourZone")} />
       </Frame>
     );
   }
@@ -80,18 +85,45 @@ export default async function TicketPage({
   // activated
   return (
     <Frame>
+      <RememberTicket token={token} />
       <Header step="✓" title={t("activatedTitle")} body={t("activatedBody")} />
-      <div className="mt-8 flex flex-col items-center gap-4">
-        <QrDisplay value={token} />
-        <p className="text-xs uppercase tracking-wider text-[var(--color-fg-muted)]">
+      <div className="mt-8 flex flex-col gap-3">
+        <div className="self-center">
+          <QrDisplay value={token} />
+        </div>
+        <p className="text-center text-xs uppercase tracking-wider text-[var(--color-fg-muted)]">
           {t("saveScreenshot")}
         </p>
-        {ticket.tier && ticket.order_no && (
-          <DownloadPdfButton token={token} orderNo={ticket.order_no} />
-        )}
+        <DownloadPdfButton token={token} orderNo={ticket.order_no} />
+        <BackToSiteButton label={t("backToSite")} />
       </div>
       <TicketMeta ticket={ticket} t={t} />
+      <VenueMapSection tier={ticket.tier} title={t("yourZone")} />
     </Frame>
+  );
+}
+
+function VenueMapSection({ tier, title }: { tier: Tier | null; title: string }) {
+  return (
+    <section className="mt-8 border-t border-[var(--color-line)] pt-6">
+      <h2 className="text-xs uppercase tracking-wider text-[var(--color-fg-muted)]">
+        {title}
+      </h2>
+      <div className="mt-4">
+        <VenueMap tier={tier} />
+      </div>
+    </section>
+  );
+}
+
+function BackToSiteButton({ label }: { label: string }) {
+  return (
+    <a
+      href="/"
+      className="flex w-full items-center justify-center rounded-full border border-[var(--color-line)] px-6 py-3 text-base font-semibold text-white transition-colors hover:border-white"
+    >
+      ← {label}
+    </a>
   );
 }
 

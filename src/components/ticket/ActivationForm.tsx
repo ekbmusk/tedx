@@ -32,6 +32,11 @@ export function ActivationForm({ token }: { token: string }) {
             setError(res.error);
             return;
           }
+          try {
+            localStorage.setItem("tedx-ticket-token", token);
+          } catch {
+            // localStorage may be unavailable
+          }
           router.refresh();
         });
       }}

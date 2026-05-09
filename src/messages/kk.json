@@ -4,7 +4,8 @@
     "theme": "Тақырып",
     "about": "TEDx туралы",
     "venue": "Орын",
-    "buyTicket": "Билет алу"
+    "buyTicket": "Билет алу",
+    "myTicket": "Менің билетім"
   },
   "hero": {
     "kicker": "TEDxZhenysPark · Түркістан",
@@ -55,7 +56,9 @@
     "name": "Иесі",
     "saveScreenshot": "Скриншот сақтаңыз",
     "downloadPdf": "Билет PDF жүктеу",
-    "tier": "Санат"
+    "tier": "Санат",
+    "backToSite": "Сайтқа оралу",
+    "yourZone": "Сіздің зонаңыз"
   },
   "admin": {
     "loginTitle": "Менеджер кірісі",
@@ -66,6 +69,7 @@
     "tickets": "Билеттер",
     "create": "Жаңа билет",
     "scan": "QR сканер",
+    "monitorNav": "Монитор",
     "copy": "Сілтемені көшіру",
     "copied": "Көшірілді",
     "openInWhatsapp": "WhatsApp-та ашу",
@@ -106,7 +110,20 @@
       "notActivated": "Билет әлі белсендірілмеген",
       "notFound": "Билет табылмады",
       "scanAgain": "Қайта сканерлеу",
-      "permission": "Камераға рұқсат беріңіз"
+      "permission": "Камераға рұқсат беріңіз",
+      "doorLabel": "Есік",
+      "pickDoor": "Есікті таңдаңыз"
+    },
+    "monitor": {
+      "title": "Кіру мониторы",
+      "autoRefresh": "Әр 7 секунд сайын жаңарады",
+      "entered": "Кірді",
+      "issued": "Берілген",
+      "activated": "Белсендірілген",
+      "used": "Қолданылған",
+      "byDoor": "Есік бойынша",
+      "door": "Есік",
+      "doorUnknown": "Белгісіз"
     }
   }
 }

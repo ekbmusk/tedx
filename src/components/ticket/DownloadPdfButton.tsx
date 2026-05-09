@@ -16,7 +16,7 @@ export function DownloadPdfButton({
       download={
         orderNo ? `TEDxZhenysPark-${orderNo}.pdf` : "TEDxZhenysPark.pdf"
       }
-      className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-[var(--color-red)] bg-[var(--color-red)]/10 px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-[var(--color-red)]"
+      className="flex w-full items-center justify-center gap-2 rounded-full bg-[var(--color-red)] px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-[var(--color-red-deep)]"
     >
       <svg
         viewBox="0 0 24 24"
