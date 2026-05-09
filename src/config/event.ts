@@ -59,8 +59,8 @@ export const event: EventConfig = {
     en: "Renewal",
   },
   themeDescription: {
-    kk: "Идеялардың күші арқылы жаңғыру мен өзгеріске шабыттандыратын форум.",
-    en: "A forum that inspires renewal and change through the power of ideas.",
+    kk: "Идеялардың күші арқылы жаңғыру мен өзгеріске шабыттандыратын іс-шара.",
+    en: "An event that inspires renewal and change through the power of ideas.",
   },
   date: "2026-05-30",
   dateLabel: {

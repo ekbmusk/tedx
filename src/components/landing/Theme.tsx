@@ -51,17 +51,22 @@ export async function Theme() {
 
       {/* sponsors marquee */}
       <div className="overflow-hidden border-b border-[var(--color-line)] py-6 md:py-8">
-        <div className="marquee-track flex w-max items-center gap-12 whitespace-nowrap md:gap-20">
+        <div
+          className="marquee-track flex w-max items-center gap-12 whitespace-nowrap md:gap-20"
+          style={{ animationDuration: "24s" }}
+        >
           {Array.from({ length: 2 }).map((_, i) => (
             <div key={i} className="flex items-center gap-12 md:gap-20">
-              {SPONSORS.map((s) => (
-                <img
-                  key={s.src}
-                  src={s.src}
-                  alt={s.alt}
-                  className={`${s.className} w-auto opacity-80`}
-                />
-              ))}
+              {Array.from({ length: 3 }).flatMap((_, k) =>
+                SPONSORS.map((s) => (
+                  <img
+                    key={`${k}-${s.src}`}
+                    src={s.src}
+                    alt={s.alt}
+                    className={`${s.className} w-auto opacity-80`}
+                  />
+                )),
+              )}
             </div>
           ))}
         </div>
