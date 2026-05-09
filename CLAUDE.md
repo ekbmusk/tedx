@@ -60,10 +60,10 @@ If you change the template, re-run `npx tsx scripts/probe-pdf.ts` to confirm the
 
 ### Content lives in code, not in the DB
 
-`src/config/event.ts` is the source of truth for event metadata, tiers, speakers (with bios in both `kk` and `en`), social handles, and the WhatsApp/Telegram CTA builder. UI strings are in `src/messages/{kk,en}.json`. The DB only knows about ticket rows; nothing about the event, speakers, or copy is persisted server-side.
+`src/config/event.ts` is the source of truth for event metadata, tiers, speakers (with bios in both `kk` and `en`), social handles, and the WhatsApp/Instagram CTA builder. UI strings are in `src/messages/{kk,en}.json`. The DB only knows about ticket rows; nothing about the event, speakers, or copy is persisted server-side.
 
 ## Environment
 
-Required: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_MANAGER_WHATSAPP` (digits only, no `+`), `NEXT_PUBLIC_MANAGER_TELEGRAM` (username, no `@`).
+Required: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_MANAGER_WHATSAPP` (digits only, no `+`), `NEXT_PUBLIC_MANAGER_INSTAGRAM` (username, no `@`).
 
 Optional: `SUPABASE_SECRET_KEY` (only if you need `createAdminClient()`).

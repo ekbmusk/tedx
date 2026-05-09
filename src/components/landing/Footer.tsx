@@ -35,15 +35,15 @@ export async function Footer() {
                 </a>
               </li>
             )}
-            {contacts.telegram && (
+            {contacts.instagram && (
               <li>
                 <a
-                  href={`https://t.me/${contacts.telegram}`}
+                  href={`https://instagram.com/${contacts.instagram}`}
                   target="_blank"
                   rel="noreferrer"
                   className="hover:text-[var(--color-red)]"
                 >
-                  Telegram @{contacts.telegram}
+                  Instagram @{contacts.instagram}
                 </a>
               </li>
             )}

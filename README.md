@@ -47,7 +47,7 @@ npm run dev
 - `src/messages/kk.json`, `src/messages/en.json` — все тексты UI.
 - `.env.local`:
   - `NEXT_PUBLIC_MANAGER_WHATSAPP` — номер для CTA «Билет алу» (формат `77001234567`, без `+` и пробелов)
-  - `NEXT_PUBLIC_MANAGER_TELEGRAM` — username (без `@`)
+  - `NEXT_PUBLIC_MANAGER_INSTAGRAM` — username (без `@`)
   - `NEXT_PUBLIC_SITE_URL` — публичный домен (для абсолютных ссылок)
 
 ## Flow продажи билета

@@ -229,7 +229,7 @@ export const event: EventConfig = {
 
 export const contacts = {
   whatsapp: process.env.NEXT_PUBLIC_MANAGER_WHATSAPP ?? "",
-  telegram: process.env.NEXT_PUBLIC_MANAGER_TELEGRAM ?? "",
+  instagram: process.env.NEXT_PUBLIC_MANAGER_INSTAGRAM ?? "tedxzhenys.park",
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
 };
 
@@ -247,8 +247,8 @@ export function buildBuyTicketLink(locale: "kk" | "en") {
   if (contacts.whatsapp) {
     return `https://wa.me/${contacts.whatsapp}?text=${encodeURIComponent(message)}`;
   }
-  if (contacts.telegram) {
-    return `https://t.me/${contacts.telegram}`;
+  if (contacts.instagram) {
+    return `https://instagram.com/${contacts.instagram}`;
   }
   return "#";
 }
