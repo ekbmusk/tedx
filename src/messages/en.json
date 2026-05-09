@@ -1,0 +1,100 @@
+{
+  "nav": {
+    "speakers": "Speakers",
+    "theme": "Theme",
+    "about": "About TEDx",
+    "venue": "Venue",
+    "buyTicket": "Get a ticket"
+  },
+  "hero": {
+    "kicker": "TEDxZhenysPark · Turkestan",
+    "themeLabel": "Theme",
+    "ctaPrimary": "Get a ticket",
+    "ctaSecondary": "See speakers",
+    "scrollHint": "scroll"
+  },
+  "about": {
+    "title": "What is TEDx?",
+    "body": "TEDx is an independently organized event that brings the spirit of TED to local communities. Each TEDx introduces fresh ideas, new perspectives and the inspiration to change. TEDxZhenysPark is one of the first independently organized TEDx events in Turkestan."
+  },
+  "theme": {
+    "title": "Renewal",
+    "subtitle": "Theme of 2026",
+    "body": "Renewal is learning from the past, rethinking the present and building tomorrow anew. We bring eight speakers to one stage — each with their own idea of renewal in their field."
+  },
+  "speakers": {
+    "title": "Speakers",
+    "subtitle": "Eight ideas, eight voices",
+    "back": "All speakers",
+    "allSpeakers": "See all speakers"
+  },
+  "venue": {
+    "title": "When and where",
+    "dateLabel": "Date",
+    "venueLabel": "Venue",
+    "cityLabel": "City"
+  },
+  "footer": {
+    "tagline": "Ideas worth spreading",
+    "rights": "TEDxZhenysPark — an independently organized TED event",
+    "contact": "Contact"
+  },
+  "ticket": {
+    "issuedTitle": "Activate your ticket",
+    "issuedBody": "Enter your name to generate the QR code you'll show at the entrance.",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "contactOptional": "Phone or email (optional)",
+    "submit": "Activate ticket",
+    "activatedTitle": "Your ticket is ready",
+    "activatedBody": "Show this QR code to a volunteer at the entrance.",
+    "usedTitle": "Ticket already used",
+    "usedBody": "This ticket has already been checked in.",
+    "notFoundTitle": "Ticket not found",
+    "notFoundBody": "The link may be invalid. Please contact the manager.",
+    "name": "Holder",
+    "saveScreenshot": "Save a screenshot"
+  },
+  "admin": {
+    "loginTitle": "Manager sign in",
+    "email": "Email",
+    "password": "Password",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "tickets": "Tickets",
+    "create": "New ticket",
+    "scan": "QR scanner",
+    "copy": "Copy link",
+    "copied": "Copied",
+    "openInWhatsapp": "Open in WhatsApp",
+    "status": {
+      "issued": "Issued",
+      "activated": "Activated",
+      "used": "Used"
+    },
+    "table": {
+      "token": "Token",
+      "holder": "Holder",
+      "status": "Status",
+      "category": "Category",
+      "created": "Issued at",
+      "actions": "Actions"
+    },
+    "newTicket": {
+      "title": "Create a new ticket",
+      "category": "Category (optional)",
+      "note": "Internal note",
+      "create": "Create",
+      "linkReady": "Link is ready — send it to the buyer"
+    },
+    "scanner": {
+      "title": "QR scanner",
+      "ok": "Allow entry",
+      "alreadyUsed": "This ticket has already been used",
+      "notActivated": "Ticket has not been activated yet",
+      "notFound": "Ticket not found",
+      "scanAgain": "Scan again",
+      "permission": "Please grant camera permission"
+    }
+  }
+}

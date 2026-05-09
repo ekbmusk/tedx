@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TEDxZhenysPark — лендинг + билеты
 
-## Getting Started
+Лендинг + страница активации билетов + админка для менеджера + PWA-сканер для волонтёров.
+Стек: **Next.js 16 (App Router) · Tailwind 4 · next-intl · Supabase**.
 
-First, run the development server:
+## Структура
+
+| Маршрут | Что |
+|---|---|
+| `/` | KZ лендинг |
+| `/en` | EN лендинг |
+| `/t/[token]` | Страница билета: первая открытие → форма «Аты-Тегі» → QR. Повторные открытия сразу показывают QR. |
+| `/admin/login` | Логин менеджера (Supabase Auth, email + пароль) |
+| `/admin` | Список всех билетов |
+| `/admin/new` | Создать билет → готовая ссылка для отправки покупателю в WhatsApp |
+| `/admin/scan` | Сканер QR на входе (камера телефона) |
+
+## Локальный запуск
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Supabase setup (требуется один раз)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Применить миграцию.** Через CLI:
+   ```bash
+   supabase login
+   supabase link --project-ref zxykpzdishvzrawsrwol
+   supabase db push
+   ```
+   Либо вручную: открой `supabase/migrations/20260509000000_init_tickets.sql` и выполни в Supabase Dashboard → SQL Editor.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. **Создать менеджеров.** Supabase Dashboard → Authentication → Users → Add user → email + пароль. Подтверждение email можно отключить в Auth Providers → Email → "Confirm email = off".
 
-## Learn More
+3. **Получить secret key (опционально).** Сейчас всё работает на publishable key + RLS. Если в будущем понадобятся серверные операции в обход RLS, добавь в `.env.local`:
+   ```
+   SUPABASE_SECRET_KEY=sb_secret_...
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+## Конфиг
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Все правки контента — в коде, не в БД:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `src/config/event.ts` — название, тема, дата, место, **спикеры**.
+- `src/messages/kk.json`, `src/messages/en.json` — все тексты UI.
+- `.env.local`:
+  - `NEXT_PUBLIC_MANAGER_WHATSAPP` — номер для CTA «Билет алу» (формат `77001234567`, без `+` и пробелов)
+  - `NEXT_PUBLIC_MANAGER_TELEGRAM` — username (без `@`)
+  - `NEXT_PUBLIC_SITE_URL` — публичный домен (для абсолютных ссылок)
 
-## Deploy on Vercel
+## Flow продажи билета
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+покупатель пишет менеджеру  →  менеджер на /admin/new создаёт билет
+                            →  жмёт «WhatsApp» → ссылка уходит в чат
+покупатель открывает ссылку →  вводит Аты-Тегі  →  получает QR
+на входе                    →  волонтёр на /admin/scan сканирует QR
+                            →  зелёный экран = пускать, жёлтый = уже использован
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Статусы билета: `issued` → `activated` → `used`.
+
+## Деплой на Vercel
+
+1. Запушь в GitHub.
+2. На Vercel → New Project → выбрать репо.
+3. Environment Variables — скопировать всё из `.env.local`. Поменять `NEXT_PUBLIC_SITE_URL` на прод-домен.
+4. Deploy.
+
+Камера для сканера требует HTTPS — на Vercel это работает из коробки.
+
+## Подменить контент
+
+- Фото спикеров — добавить `photoUrl` в `src/config/event.ts` (загрузить в `public/speakers/...` или в Supabase Storage).
+- Поменять цвета — `src/app/globals.css`, `--color-red`.
+- Поменять CTA-кнопку — `buildBuyTicketLink()` в `src/config/event.ts`.
