@@ -43,7 +43,7 @@ export async function sendTicketActivatedEmail(args: TicketEmailArgs) {
     const attachments: {
       filename: string;
       content: string;
-      content_id?: string;
+      contentId?: string;
     }[] = [];
     let hasInlinePreview = false;
 
@@ -55,17 +55,13 @@ export async function sendTicketActivatedEmail(args: TicketEmailArgs) {
         token: args.token,
       });
       const base64 = png.toString("base64");
-      // Same PNG used twice: as inline preview (cid) AND as downloadable
-      // attachment with a friendly filename. Most clients show one
-      // attachment chip plus the inline image in the body.
+      // Inline attachment (referenced from <img src="cid:ticket-preview">)
+      // doubles as the downloadable file — single PNG, single chip in
+      // the recipient's attachment list.
       attachments.push({
         filename: `TEDxZhenysPark-${args.orderNo}.png`,
         content: base64,
-      });
-      attachments.push({
-        filename: "ticket-preview.png",
-        content: base64,
-        content_id: "ticket-preview",
+        contentId: "ticket-preview",
       });
       hasInlinePreview = true;
     }
