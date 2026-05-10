@@ -20,9 +20,27 @@ export async function generateMetadata({
   const { locale, slug } = await params;
   const speaker = event.speakers.find((s) => s.slug === slug);
   if (!speaker) return {};
+  const title = `${speaker.name[locale]} — TEDxZhenysPark`;
+  const description = speaker.title[locale];
+  const path = `/speakers/${slug}`;
   return {
-    title: `${speaker.name[locale]} — TEDxZhenysPark`,
-    description: speaker.title[locale],
+    title,
+    description,
+    alternates: {
+      canonical: locale === "en" ? `/en${path}` : path,
+      languages: { kk: path, en: `/en${path}` },
+    },
+    openGraph: {
+      title,
+      description,
+      type: "profile",
+      locale: locale === "en" ? "en_US" : "kk_KZ",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
   };
 }
 
