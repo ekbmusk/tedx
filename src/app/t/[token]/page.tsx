@@ -90,9 +90,6 @@ export default async function TicketPage({
       <Header step="✓" title={t("activatedTitle")} body={t("activatedBody")} />
       <div className="mt-8 flex flex-col gap-3">
         <TicketImage token={token} />
-        <p className="text-center text-xs uppercase tracking-wider text-[var(--color-fg-muted)]">
-          {t("saveScreenshot")}
-        </p>
         <DownloadImageButton token={token} orderNo={ticket.order_no} />
         <AddToCalendarButton label={t("addToCalendar")} />
         <BackToSiteButton label={t("backToSite")} />
