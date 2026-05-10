@@ -98,7 +98,11 @@
     "tier": "Tier",
     "backToSite": "Back to site",
     "yourZone": "Your zone",
-    "addToCalendar": "Add to calendar"
+    "addToCalendar": "Add to calendar",
+    "errorNameRequired": "Please enter your name",
+    "errorNotFound": "Ticket not found. The link may be invalid.",
+    "errorGeneric": "Something went wrong. Please try again.",
+    "errorNetwork": "Network error. Check your connection and try again."
   },
   "admin": {
     "loginTitle": "Manager sign in",

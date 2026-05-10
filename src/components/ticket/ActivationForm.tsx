@@ -5,6 +5,19 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { activateTicket } from "@/app/t/[token]/actions";
 
+function mapError(raw: string, t: (key: string) => string): string {
+  // Map known internal codes to localized messages; fall through to a
+  // generic friendly message instead of leaking Supabase internals.
+  switch (raw) {
+    case "name_required":
+      return t("errorNameRequired");
+    case "not_found":
+      return t("errorNotFound");
+    default:
+      return t("errorGeneric");
+  }
+}
+
 export function ActivationForm({ token }: { token: string }) {
   const t = useTranslations("ticket");
   const [pending, startTransition] = useTransition();
@@ -23,21 +36,30 @@ export function ActivationForm({ token }: { token: string }) {
         const contact = String(fd.get("contact") || "").trim();
         const fullName = [first, last].filter(Boolean).join(" ");
         if (!fullName) {
-          setError(t("firstName"));
+          setError(t("errorNameRequired"));
           return;
         }
         startTransition(async () => {
-          const res = await activateTicket(token, fullName, contact || undefined);
-          if (!res.ok) {
-            setError(res.error);
-            return;
-          }
           try {
-            localStorage.setItem("tedx-ticket-token", token);
+            const res = await activateTicket(
+              token,
+              fullName,
+              contact || undefined,
+            );
+            if (!res.ok) {
+              setError(mapError(res.error, t));
+              return;
+            }
+            try {
+              localStorage.setItem("tedx-ticket-token", token);
+            } catch {
+              // localStorage may be unavailable
+            }
+            router.refresh();
           } catch {
-            // localStorage may be unavailable
+            // Network / unexpected exception (server action threw).
+            setError(t("errorNetwork"));
           }
-          router.refresh();
         });
       }}
     >
