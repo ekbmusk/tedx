@@ -1,5 +1,6 @@
 "use server";
 
+import { after } from "next/server";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { sendTicketActivatedEmail } from "@/lib/email";
@@ -37,20 +38,23 @@ export async function activateTicket(
   const row = Array.isArray(data) ? data[0] : data;
   if (!row) return { ok: false, error: "not_found" };
 
-  // Best-effort email notification. Fire-and-forget to keep activation snappy;
-  // any failure is logged inside sendTicketActivatedEmail.
+  // Best-effort email notification. `after()` keeps the serverless invocation
+  // alive past the response via Vercel's waitUntil — fire-and-forget alone
+  // gets killed on Vercel before Resend receives the request.
   // activate_ticket RPC doesn't return tier/order_no, so re-fetch via
   // get_ticket_by_token to attach the per-tier image.
-  const { data: full } = await supabase.rpc("get_ticket_by_token", {
-    p_token: token,
-  });
-  const fullRow = Array.isArray(full) ? full[0] : full;
-  void sendTicketActivatedEmail({
-    to: trimmedContact,
-    token,
-    holderName: holderName.trim(),
-    tier: (fullRow?.tier ?? null) as Tier | null,
-    orderNo: (fullRow?.order_no ?? null) as string | null,
+  after(async () => {
+    const { data: full } = await supabase.rpc("get_ticket_by_token", {
+      p_token: token,
+    });
+    const fullRow = Array.isArray(full) ? full[0] : full;
+    await sendTicketActivatedEmail({
+      to: trimmedContact,
+      token,
+      holderName: holderName.trim(),
+      tier: (fullRow?.tier ?? null) as Tier | null,
+      orderNo: (fullRow?.order_no ?? null) as string | null,
+    });
   });
 
   revalidatePath(`/t/${token}`);

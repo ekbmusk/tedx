@@ -223,6 +223,28 @@ export const event: EventConfig = {
         { kind: "facebook", url: "https://www.facebook.com/profile.php?id=100038291794421", label: "Facebook" },
       ],
     },
+    {
+      slug: "sholpan-abdikhalikova",
+      name: { kk: "Шолпан Әбдіхалықова", en: "Sholpan Abdikhalikova" },
+      title: {
+        kk: "QazGranit зауытының президенті, кәсіпкер",
+        en: "President of QazGranit, entrepreneur",
+      },
+      bio: {
+        kk: "Қазақстандағы алғашқы әрі ең ірі гранит зауыты QazGranit компаниясының президенті, Respublica партиясының Алматы қалалық филиалының төрайымы. Банк және телекоммуникация саласындағы көпжылдық тәжірибеден кейін отбасылық кәсіпті ірі өнеркәсіптік жобаға айналдырды; QazGranit Президенттің «Алтын сапа» сыйлығының иегері. Төрт бала анасы, әйел көшбасшылығы мен «ерлер саласы» саналатын өндірісте табысқа жету туралы ашық сөйлейді.",
+        en: "President of QazGranit — Kazakhstan's first and largest granite plant — and chair of the Almaty branch of the Respublica party. After a long career in banking and telecoms she turned a family business into a major industrial project; QazGranit holds the President's 'Altyn Sapa' quality award. A mother of four, she speaks openly about women's leadership and succeeding in industries traditionally seen as 'male'.",
+      },
+      photoUrl: "/speakers/sholpan-abdikalik.jpg",
+      socials: [
+        { kind: "instagram", url: "https://www.instagram.com/sholpan.abdikhalikova/", label: "@sholpan.abdikhalikova" },
+      ],
+      brands: [
+        { kind: "instagram", url: "https://www.instagram.com/qazgranit/", label: "@qazgranit" },
+        { kind: "instagram", url: "https://www.instagram.com/respublica_partiyasy_almaty/", label: "@respublica_partiyasy_almaty" },
+        { kind: "instagram", url: "https://www.instagram.com/atameken.alm/", label: "@atameken.alm" },
+        { kind: "instagram", url: "https://www.instagram.com/almaty.kenes/", label: "@almaty.kenes" },
+      ],
+    },
   ],
 };
 

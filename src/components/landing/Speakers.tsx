@@ -46,8 +46,8 @@ export async function Speakers({ locale }: { locale: "kk" | "en" }) {
           </p>
         </div>
 
-        {/* Desktop: grid */}
-        <div className="hidden grid-cols-2 gap-px bg-[var(--color-line)] md:grid md:grid-cols-3 lg:grid-cols-4">
+        {/* Desktop: 3×3 grid (9 speakers) */}
+        <div className="hidden grid-cols-2 gap-px bg-[var(--color-line)] md:grid md:grid-cols-3">
           {event.speakers.map((s, i) => (
             <SpeakerCard key={s.slug} speaker={s} locale={locale} index={i} />
           ))}

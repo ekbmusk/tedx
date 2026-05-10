@@ -11,7 +11,7 @@ const PRODID = "-//TEDxZhenysPark//Event//EN";
 
 // Increment whenever a slot time/title changes. Calendar clients use
 // SEQUENCE to decide whether to overwrite the local copy (RFC 5545).
-const CALENDAR_SEQUENCE = 1;
+const CALENDAR_SEQUENCE = 3;
 
 // 30 May 2026 (Asia/Almaty UTC+5, no DST → straight subtract 5h).
 const EVENT_DATE_UTC = "20260530";
@@ -37,17 +37,16 @@ type Slot =
         | "close"
         | "coffee"
         | "lunch"
-        | "networking"
-        | "break"
-        | "panel";
+        | "qa"
+        | "music";
       start: string;
       end: string;
       summary: string;
     };
 
 // Public agenda. Excludes private operational slots (2-min transitions
-// between talks, panel prep, post-closing buffer, private lunch/dinner
-// for the team) — only what attendees should see in their calendar.
+// between talks, post-closing buffer, private dinner for the team) —
+// only what attendees should see in their calendar.
 const SLOTS: Slot[] = [
   {
     kind: "registration",
@@ -61,79 +60,91 @@ const SLOTS: Slot[] = [
     end: "10:05",
     summary: "Ашылу · Opening",
   },
-  { kind: "talk", start: "10:05", end: "10:21", speakerSlug: "nazym-zhangazy" },
+  { kind: "talk", start: "10:05", end: "10:20", speakerSlug: "nazym-zhangazy" },
   {
     kind: "talk",
-    start: "10:23",
-    end: "10:41",
+    start: "10:22",
+    end: "10:37",
     speakerSlug: "ardan-galymuly",
   },
   {
     kind: "talk",
-    start: "10:43",
-    end: "10:59",
+    start: "10:39",
+    end: "10:54",
     speakerSlug: "aigerim-kusayinkyzy",
   },
   {
+    kind: "qa",
+    start: "10:54",
+    end: "11:04",
+    summary: "Q&A · 1–3 спикерлер / 1–3 speakers",
+  },
+  {
     kind: "coffee",
-    start: "11:00",
-    end: "11:30",
+    start: "11:04",
+    end: "11:50",
     summary: "Кофе-брейк · Coffee break",
   },
   {
     kind: "talk",
-    start: "11:30",
-    end: "11:46",
+    start: "11:50",
+    end: "12:05",
     speakerSlug: "kultay-adilova",
   },
   {
     kind: "talk",
-    start: "11:48",
-    end: "12:04",
+    start: "12:07",
+    end: "12:22",
     speakerSlug: "orken-kenzhebek",
   },
   {
     kind: "talk",
-    start: "12:06",
-    end: "12:22",
+    start: "12:24",
+    end: "12:39",
     speakerSlug: "aliya-ospanova",
   },
   {
-    kind: "networking",
-    start: "12:22",
+    kind: "qa",
+    start: "12:39",
+    end: "12:49",
+    summary: "Q&A · 4–6 спикерлер / 4–6 speakers",
+  },
+  {
+    kind: "music",
+    start: "12:50",
     end: "13:00",
-    summary: "Нетворкинг · Networking",
+    summary: "Анвар · музыкалық қойылым / musical performance",
   },
   {
     kind: "lunch",
     start: "13:00",
-    end: "14:00",
+    end: "14:30",
     summary: "Обед · Lunch break",
   },
   {
-    kind: "break",
-    start: "14:00",
-    end: "15:30",
-    summary: "Свободное время · Free time",
+    kind: "talk",
+    start: "14:30",
+    end: "14:45",
+    speakerSlug: "sholpan-abdikhalikova",
   },
   {
     kind: "talk",
-    start: "15:30",
-    end: "15:46",
+    start: "14:47",
+    end: "15:02",
     speakerSlug: "inara-namazbayeva",
   },
-  { kind: "talk", start: "15:48", end: "16:06", speakerSlug: "ayat-azimov" },
+  { kind: "talk", start: "15:04", end: "15:19", speakerSlug: "ayat-azimov" },
   {
-    kind: "panel",
-    start: "16:10",
-    end: "17:10",
-    summary: "Q&A панель · Q&A panel",
+    kind: "qa",
+    start: "15:19",
+    end: "15:29",
+    summary: "Q&A · 7–9 спикерлер / 7–9 speakers",
   },
   {
     kind: "close",
-    start: "17:10",
-    end: "17:30",
-    summary: "Жабылу · Closing",
+    start: "15:29",
+    end: "15:49",
+    summary: "Жабылу · Closing · ortaq foto / group photo",
   },
 ];
 
@@ -193,9 +204,9 @@ export async function GET() {
     `DTSTAMP:${now}`,
     `SEQUENCE:${CALENDAR_SEQUENCE}`,
     `DTSTART:${utc("10:00")}`,
-    `DTEND:${utc("17:30")}`,
+    `DTEND:${utc("15:49")}`,
     "SUMMARY:TEDxZhenysPark · Жаңғыру / Renewal",
-    "DESCRIPTION:TED-licensed conference in Türkistan. Theme: Renewal. Doors open 08:00\\, talks start 10:00\\, closing 17:30.",
+    "DESCRIPTION:TED-licensed conference in Türkistan. Theme: Renewal. Doors open 08:00\\, talks start 10:00\\, closing 15:49.",
     `LOCATION:${LOCATION}`,
     "URL:https://www.tedx.kz/",
     "STATUS:CONFIRMED",

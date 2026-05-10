@@ -14,12 +14,12 @@ import { buildBuyTicketLink, event } from "@/config/event";
 const META_KK = {
   title: `TEDxZhenysPark 2026 — Жаңғыру | ${event.dateLabel.kk}, ${event.city.kk}`,
   description:
-    "Түркістандағы алғашқы облыстық деңгейдегі TEDx-конференция. 8 спикер, бір сахна, жаңғыру идеясы. 30 мамыр 2026, Karavansaray Arena.",
+    "Түркістандағы алғашқы облыстық деңгейдегі TEDx-конференция. 9 спикер, бір сахна, жаңғыру идеясы. 30 мамыр 2026, Karavansaray Arena.",
 };
 const META_EN = {
   title: `TEDxZhenysPark 2026 — Renewal | ${event.dateLabel.en}, ${event.city.en}`,
   description:
-    "The first regional-level TEDx conference in Türkistan. 8 speakers, one stage, ideas of renewal. May 30, 2026 at Karavansaray Arena.",
+    "The first regional-level TEDx conference in Türkistan. 9 speakers, one stage, ideas of renewal. May 30, 2026 at Karavansaray Arena.",
 };
 
 export async function generateMetadata({

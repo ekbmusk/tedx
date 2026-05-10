@@ -64,7 +64,7 @@ Resend SDK quirk: input is `contentId` (camelCase) for inline-cid attachments, *
 
 `/calendar.ics` returns a multi-VEVENT subscription feed. The "Add to calendar" button uses `webcal://www.tedx.kz/calendar.ics` — calendar apps **subscribe** and re-poll on `REFRESH-INTERVAL:PT1H` rather than downloading a frozen snapshot.
 
-The route generates one container `VEVENT` (10:00–17:30, `TRANSP:TRANSPARENT` so it doesn't double-block the user's busy time) plus 16 inner slot events: registration, opening, 8 talks, coffee break, networking, lunch, free time, panel, closing. Times are stored as `"HH:MM"` Asia/Almaty in the `SLOTS[]` array — no DST, straight UTC = local − 5h.
+The route generates one container `VEVENT` (10:00–15:49, `TRANSP:TRANSPARENT` so it doesn't double-block the user's busy time) plus 18 inner slot events: registration, opening, 9 speaker talks (resolved via `speakerSlug` against `event.speakers`), 3 Q&A blocks, coffee break, music guest (Анвар), lunch, closing. Times are stored as `"HH:MM"` Asia/Almaty in the `SLOTS[]` array — no DST, straight UTC = local − 5h.
 
 **To update the schedule**: edit `SLOTS[]` and bump `CALENDAR_SEQUENCE`. Calendar clients use SEQUENCE per RFC 5545 to decide whether to overwrite the local entry. Apple Calendar polls every ~15 min, Google ~4–6 h. UIDs per slot are stable (`tedxzhenyspark-2026-talk-${slug}@tedx.kz`) so updates land on the existing entry instead of duplicating.
 
