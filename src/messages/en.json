@@ -45,6 +45,7 @@
     "issuedBody": "Enter your name to generate the QR code you'll show at the entrance.",
     "firstName": "First name",
     "lastName": "Last name",
+    "emailLabel": "Email",
     "contactOptional": "Phone or email (optional)",
     "submit": "Activate ticket",
     "activatedTitle": "Your ticket is ready",
@@ -61,6 +62,8 @@
     "yourZone": "Your zone",
     "addToCalendar": "Add to calendar",
     "errorNameRequired": "Please enter your name",
+    "errorEmailRequired": "Email is required — your ticket copy is sent there",
+    "errorEmailInvalid": "Email format looks invalid",
     "errorNotFound": "Ticket not found. The link may be invalid.",
     "errorGeneric": "Something went wrong. Please try again.",
     "errorNetwork": "Network error. Check your connection and try again."
@@ -86,6 +89,7 @@
     "table": {
       "token": "Token",
       "holder": "Holder",
+      "email": "Email",
       "status": "Status",
       "category": "Category",
       "tier": "Tier",

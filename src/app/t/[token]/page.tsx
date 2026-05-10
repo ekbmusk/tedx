@@ -2,7 +2,6 @@ import { getTranslations } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { event, TIER_LABEL, type Tier } from "@/config/event";
 import { ActivationForm } from "@/components/ticket/ActivationForm";
-import { QrDisplay } from "@/components/ticket/QrDisplay";
 import { DownloadImageButton } from "@/components/ticket/DownloadImageButton";
 import { RememberTicket } from "@/components/ticket/RememberTicket";
 import { VenueMap } from "@/components/ticket/VenueMap";
@@ -74,9 +73,7 @@ export default async function TicketPage({
         </h1>
         <p className="mt-3 text-[var(--color-fg-muted)]">{t("usedBody")}</p>
         <div className="mt-6 flex flex-col gap-3">
-          <div className="self-center">
-            <QrDisplay value={token} />
-          </div>
+          <TicketImage token={token} />
           <DownloadImageButton token={token} orderNo={ticket.order_no} />
           <BackToSiteButton label={t("backToSite")} />
         </div>
@@ -92,9 +89,7 @@ export default async function TicketPage({
       <RememberTicket token={token} />
       <Header step="✓" title={t("activatedTitle")} body={t("activatedBody")} />
       <div className="mt-8 flex flex-col gap-3">
-        <div className="self-center">
-          <QrDisplay value={token} />
-        </div>
+        <TicketImage token={token} />
         <p className="text-center text-xs uppercase tracking-wider text-[var(--color-fg-muted)]">
           {t("saveScreenshot")}
         </p>
@@ -105,6 +100,17 @@ export default async function TicketPage({
       <TicketMeta ticket={ticket} t={t} />
       <VenueMapSection tier={ticket.tier} title={t("yourZone")} />
     </Frame>
+  );
+}
+
+function TicketImage({ token }: { token: string }) {
+  return (
+    /* eslint-disable-next-line @next/next/no-img-element */
+    <img
+      src={`/t/${token}/image`}
+      alt="Сіздің билетіңіз · Your ticket"
+      className="ticket-image w-full rounded-2xl border border-[var(--color-line)]"
+    />
   );
 }
 

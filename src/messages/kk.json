@@ -45,6 +45,7 @@
     "issuedBody": "Кіру үшін QR кодын алу мақсатында өз атыңыз бен тегіңізді енгізіңіз.",
     "firstName": "Аты",
     "lastName": "Тегі",
+    "emailLabel": "Email",
     "contactOptional": "Телефон немесе email (міндетті емес)",
     "submit": "Билетті белсендіру",
     "activatedTitle": "Билет дайын",
@@ -61,6 +62,8 @@
     "yourZone": "Сіздің зонаңыз",
     "addToCalendar": "Күнтізбеге қосу",
     "errorNameRequired": "Атыңызды енгізіңіз",
+    "errorEmailRequired": "Email енгізіңіз — билет көшірмесі сонда жіберіледі",
+    "errorEmailInvalid": "Email пішімі дұрыс емес",
     "errorNotFound": "Билет табылмады. Сілтеме жарамсыз болуы мүмкін.",
     "errorGeneric": "Бірдеңе қате кетті. Қайталап көріңіз.",
     "errorNetwork": "Желі қатесі. Интернет байланысын тексеріп, қайталаңыз."
@@ -86,6 +89,7 @@
     "table": {
       "token": "Токен",
       "holder": "Иесі",
+      "email": "Email",
       "status": "Статус",
       "category": "Санат",
       "tier": "Санат",

@@ -9,6 +9,7 @@ type Ticket = {
   token: string;
   status: "issued" | "activated" | "used";
   holder_name: string | null;
+  holder_contact: string | null;
   category: string | null;
   tier: Tier | null;
   order_no: string | null;
@@ -42,6 +43,7 @@ export function TicketsTable({ tickets }: { tickets: Ticket[] }) {
             <th className="px-4 py-3">{t("table.orderNo")}</th>
             <th className="px-4 py-3">{t("table.tier")}</th>
             <th className="px-4 py-3">{t("table.holder")}</th>
+            <th className="px-4 py-3">{t("table.email")}</th>
             <th className="px-4 py-3">{t("table.status")}</th>
             <th className="px-4 py-3">{t("table.token")}</th>
             <th className="px-4 py-3">{t("table.created")}</th>
@@ -61,6 +63,18 @@ export function TicketsTable({ tickets }: { tickets: Ticket[] }) {
                 {tk.tier ? <TierBadge tier={tk.tier} /> : "—"}
               </td>
               <td className="px-4 py-3">{tk.holder_name ?? "—"}</td>
+              <td className="px-4 py-3 text-[var(--color-fg-muted)]">
+                {tk.holder_contact ? (
+                  <a
+                    href={`mailto:${tk.holder_contact}`}
+                    className="hover:text-[var(--color-red)]"
+                  >
+                    {tk.holder_contact}
+                  </a>
+                ) : (
+                  "—"
+                )}
+              </td>
               <td className="px-4 py-3">
                 <StatusBadge status={tk.status} />
               </td>
