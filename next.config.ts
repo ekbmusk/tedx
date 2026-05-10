@@ -10,8 +10,8 @@ const nextConfig: NextConfig = {
   },
   // pdf-to-png-converter pulls in @napi-rs/canvas + pdfjs-dist with native
   // .node bindings; let Next leave them outside the bundle and require()
-  // at runtime.
-  serverExternalPackages: ["pdf-to-png-converter"],
+  // at runtime. We also access pdfjs-dist directly to set the worker path.
+  serverExternalPackages: ["pdf-to-png-converter", "pdfjs-dist"],
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "tedturkestan.lovable.app" },
