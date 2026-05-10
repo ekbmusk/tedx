@@ -113,9 +113,11 @@ function TicketImage({ token }: { token: string }) {
 
 function AddToCalendarButton({ label }: { label: string }) {
   return (
+    // webcal:// makes calendar apps subscribe to the feed instead of
+    // downloading a snapshot. They'll re-poll based on REFRESH-INTERVAL
+    // (~1h) so changes to DTSTART/DTEND/LOCATION propagate automatically.
     <a
-      href="/calendar.ics"
-      download="tedxzhenyspark.ics"
+      href="webcal://www.tedx.kz/calendar.ics"
       className="flex w-full items-center justify-center gap-2 rounded-full border border-[var(--color-line)] px-6 py-3 text-base font-semibold text-white transition-colors hover:border-white"
     >
       <svg

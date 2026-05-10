@@ -155,7 +155,9 @@ function ticketHtml(args: TicketEmailArgs, hasInlinePreview: boolean) {
   const order = args.orderNo ?? "—";
   const ticketUrl = `${SITE}/t/${args.token}`;
   const ticketImageUrl = `${SITE}/t/${args.token}/image`;
-  const calendarUrl = `${SITE}/calendar.ics`;
+  // webcal:// scheme — calendar apps subscribe and auto-refresh on
+  // REFRESH-INTERVAL, so any update to DTSTART/LOCATION propagates.
+  const calendarUrl = `webcal://${SITE.replace(/^https?:\/\//, "")}/calendar.ics`;
 
   const previewBlock = hasInlinePreview
     ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;">
