@@ -7,10 +7,8 @@ import { Theme } from "@/components/landing/Theme";
 import { Speakers } from "@/components/landing/Speakers";
 import { ForumPhotos } from "@/components/landing/ForumPhotos";
 import { Venue } from "@/components/landing/Venue";
-import { FAQ } from "@/components/landing/FAQ";
 import { Footer } from "@/components/landing/Footer";
 import { EventSchema } from "@/components/landing/EventSchema";
-import { FaqSchema } from "@/components/landing/FaqSchema";
 import { buildBuyTicketLink, event } from "@/config/event";
 
 const META_KK = {
@@ -64,7 +62,6 @@ export default async function HomePage({
   return (
     <main className="bg-[var(--color-bg)] text-[var(--color-fg)]">
       <EventSchema locale={locale} />
-      <FaqSchema locale={locale} />
       <Nav buyHref={buyHref} />
       <Hero locale={locale} buyHref={buyHref} />
       <About />
@@ -72,7 +69,6 @@ export default async function HomePage({
       <Speakers locale={locale} />
       <ForumPhotos locale={locale} />
       <Venue locale={locale} buyHref={buyHref} />
-      <FAQ />
       <Footer />
     </main>
   );

@@ -4,7 +4,6 @@
     "theme": "Theme",
     "about": "About TEDx",
     "venue": "Venue",
-    "faq": "FAQ",
     "buyTicket": "Get a ticket",
     "myTicket": "My ticket"
   },
@@ -35,44 +34,6 @@
     "dateLabel": "Date",
     "venueLabel": "Venue",
     "cityLabel": "City"
-  },
-  "faq": {
-    "title": "Frequently asked questions",
-    "subtitle": "Tickets, schedule and venue.",
-    "items": {
-      "tedx": {
-        "q": "What is TEDx?",
-        "a": "TEDx is an independently organized event that brings the spirit of TED to local communities. Each TEDx introduces fresh ideas, new perspectives and the inspiration to change."
-      },
-      "buyTicket": {
-        "q": "How do I buy a ticket?",
-        "a": "Hit the \"Get a ticket\" button to message our manager on WhatsApp. They'll share the payment instructions and send back a personal ticket link once paid."
-      },
-      "language": {
-        "q": "What language are the talks in?",
-        "a": "Most talks will be in Kazakh. A few speakers may use Russian or English."
-      },
-      "schedule": {
-        "q": "When does it start?",
-        "a": "May 30, 2026. Doors open at 08:00, the first talk begins at 10:00. The full programme runs about 6 hours including breaks."
-      },
-      "dressCode": {
-        "q": "Is there a dress code?",
-        "a": "Smart casual is recommended but not required. Wear what makes you comfortable for a 6-hour day."
-      },
-      "kids": {
-        "q": "Can I bring kids?",
-        "a": "Children 12 and older are welcome with a ticket. The pace of the talks may be challenging for younger kids."
-      },
-      "parking": {
-        "q": "Where do I park?",
-        "a": "Free parking is available next to Karavansaray Arena. We recommend arriving at least 30 minutes before the start."
-      },
-      "refund": {
-        "q": "Can I refund my ticket?",
-        "a": "Tickets can be transferred to another person — message the manager on WhatsApp. Refunds are available up to 7 days before the event."
-      }
-    }
   },
   "footer": {
     "tagline": "Ideas worth spreading",
