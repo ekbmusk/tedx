@@ -14,10 +14,25 @@ function getResend(): Resend | null {
 }
 
 const FROM = process.env.EMAIL_FROM ?? "TEDxZhenysPark <tickets@tedx.kz>";
+const REPLY_TO = process.env.EMAIL_REPLY_TO ?? "tickets@tedx.kz";
 const SITE = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.tedx.kz").replace(
   /\/$/,
   "",
 );
+
+// Headers that consistently lift deliverability for transactional mail:
+//   - List-Unsubscribe / List-Unsubscribe-Post = required by Gmail/Yahoo
+//     bulk-sender rules since 2024 even for transactional. Mailto-only
+//     unsubscribe is fine since we don't bulk-promote.
+//   - X-Entity-Ref-ID = Gmail uses this to keep similar-looking emails
+//     from collapsing into the same thread.
+function transactionalHeaders(refId: string): Record<string, string> {
+  return {
+    "List-Unsubscribe": `<mailto:${REPLY_TO}?subject=unsubscribe>`,
+    "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+    "X-Entity-Ref-ID": refId,
+  };
+}
 
 export type TicketEmailArgs = {
   to: string;
@@ -65,9 +80,12 @@ export async function sendTicketActivatedEmail(args: TicketEmailArgs) {
     await resend.emails.send({
       from: FROM,
       to: args.to,
-      subject: "TEDxZhenysPark — билетіңіз дайын / your ticket is ready",
+      replyTo: REPLY_TO,
+      subject: `TEDxZhenysPark · ${args.holderName} · ${args.orderNo ?? "билет"}`,
       html: ticketHtml(args, hasInlinePreview),
+      text: ticketText(args),
       attachments,
+      headers: transactionalHeaders(`ticket-${args.token}`),
     });
   } catch (e) {
     console.error("[email] sendTicketActivatedEmail failed:", e);
@@ -88,8 +106,11 @@ export async function sendReminderEmail(args: ReminderEmailArgs) {
     await resend.emails.send({
       from: FROM,
       to: args.to,
-      subject: "TEDxZhenysPark — еске салу / friendly reminder",
+      replyTo: REPLY_TO,
+      subject: `TEDxZhenysPark · ${event.dateLabel.kk} · еске салу`,
       html: reminderHtml(args),
+      text: reminderText(args),
+      headers: transactionalHeaders(`reminder-${args.token}`),
     });
   } catch (e) {
     console.error("[email] sendReminderEmail failed:", e);
@@ -207,4 +228,48 @@ function escape(s: string) {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
+}
+
+// ── Plain-text alternatives ────────────────────────────────────────────
+// Spam classifiers reward emails that include a real text/plain part
+// alongside the HTML. Keep these short and natural — they're a fallback
+// for plaintext clients but also a deliverability signal.
+
+function ticketText(args: TicketEmailArgs) {
+  const tierLabel = args.tier ? TIER_LABEL[args.tier] : "—";
+  const order = args.orderNo ?? "—";
+  const lines = [
+    `TEDxZhenysPark — Билетіңіз дайын / Your ticket is ready`,
+    ``,
+    `${args.holderName}, ${event.dateLabel.kk} күні ${event.venue.kk}-ға күтеміз.`,
+    `${args.holderName}, see you on ${event.dateLabel.en} at ${event.venue.en}.`,
+    ``,
+    `Tier: ${tierLabel} · ${order}`,
+    ``,
+    `Билетті көру / View ticket: ${SITE}/t/${args.token}`,
+    `Сурет / Image: ${SITE}/t/${args.token}/image`,
+    `Күнтізбе / Calendar: ${SITE}/calendar.ics`,
+    ``,
+    `Билет суреті құрылғыңызға сақталған PNG файл ретінде осы хатқа тіркелді — кіру кезінде QR-код керек болады.`,
+    `The ticket image is attached to this email as PNG — you'll need the QR code at the entrance.`,
+    ``,
+    `—`,
+    `This independent TEDx event is operated under license from TED.`,
+  ];
+  return lines.join("\n");
+}
+
+function reminderText(args: ReminderEmailArgs) {
+  const lines = [
+    `TEDxZhenysPark — еске салу / friendly reminder`,
+    ``,
+    `${args.holderName}, ${event.dateLabel.kk} жақын. ${event.venue.kk}-да 08:00-де тіркелу басталады, бірінші сөйлесу 10:00-де.`,
+    `${args.holderName}, ${event.dateLabel.en} is close. Doors open at 08:00, first talk at 10:00 at ${event.venue.en}.`,
+    ``,
+    `Билетіңіз / Your ticket: ${SITE}/t/${args.token}`,
+    ``,
+    `—`,
+    `This independent TEDx event is operated under license from TED.`,
+  ];
+  return lines.join("\n");
 }
