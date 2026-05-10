@@ -64,9 +64,13 @@ Resend SDK quirk: input is `contentId` (camelCase) for inline-cid attachments, *
 
 `/calendar.ics` returns a multi-VEVENT subscription feed. The "Add to calendar" button uses `webcal://www.tedx.kz/calendar.ics` — calendar apps **subscribe** and re-poll on `REFRESH-INTERVAL:PT1H` rather than downloading a frozen snapshot.
 
-The route generates one container `VEVENT` (10:00–15:49, `TRANSP:TRANSPARENT` so it doesn't double-block the user's busy time) plus 18 inner slot events: registration, opening, 9 speaker talks (resolved via `speakerSlug` against `event.speakers`), 3 Q&A blocks, coffee break, music guest (Анвар), lunch, closing. Times are stored as `"HH:MM"` Asia/Almaty in the `SLOTS[]` array — no DST, straight UTC = local − 5h.
+`SLOTS[]` lives in `src/config/schedule.ts` and is the single source of truth for the day's programme. Two consumers:
+- `/calendar.ics` route — emits one container `VEVENT` (10:00–15:49, `TRANSP:TRANSPARENT` so it doesn't double-block the user's busy time) plus 18 inner slot events: registration, opening, 9 speaker talks (resolved via `speakerSlug` against `event.speakers`), 3 Q&A blocks, coffee break, music guest (Анвар), lunch, closing. Non-talk `summary` is bilingual `{kk, en}`; the .ics route concatenates them as `${kk} · ${en}` for the `SUMMARY` line.
+- `<Schedule/>` landing section — renders the same `SLOTS[]` as a timeline, filtering out `registration / open / close`. **Gated behind `useHasTicket()` (`src/lib/use-has-ticket.ts`)**: the section is a `"use client"` component that returns `null` on SSR and for visitors without `localStorage["tedx-ticket-token"]`, so the programme stays out of the public HTML and only ticket holders see it after hydration. The section is unnumbered — guests just see the regular `01..05` flow (About, Theme, Speakers, ForumPhotos, Venue) with no gap. Holders get an extra `<Schedule>` block between Speakers and ForumPhotos plus a `<ScheduleLink>` pill in the Nav next to `<MyTicketLink>` (both share `useHasTicket()`).
 
-**To update the schedule**: edit `SLOTS[]` and bump `CALENDAR_SEQUENCE`. Calendar clients use SEQUENCE per RFC 5545 to decide whether to overwrite the local entry. Apple Calendar polls every ~15 min, Google ~4–6 h. UIDs per slot are stable (`tedxzhenyspark-2026-talk-${slug}@tedx.kz`) so updates land on the existing entry instead of duplicating.
+Times are stored as `"HH:MM"` Asia/Almaty in `SLOTS[]` — no DST, straight UTC = local − 5h.
+
+**To update the schedule**: edit `SLOTS[]` in `src/config/schedule.ts` and bump `CALENDAR_SEQUENCE` in `src/app/calendar.ics/route.ts`. Calendar clients use SEQUENCE per RFC 5545 to decide whether to overwrite the local entry. Apple Calendar polls every ~15 min, Google ~4–6 h. UIDs per slot are stable (`tedxzhenyspark-2026-talk-${slug}@tedx.kz`) so updates land on the existing entry instead of duplicating.
 
 Anyone who already imported the *old* single-event `.ics` as a snapshot (before subscription was wired) keeps their stale copy — they need to re-add via webcal:// to start receiving updates.
 

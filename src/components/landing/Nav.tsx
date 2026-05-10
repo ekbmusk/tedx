@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { useEffect, useState } from "react";
 import { MyTicketLink } from "./MyTicketLink";
+import { ScheduleLink } from "./ScheduleLink";
 
 export function Nav({ buyHref }: { buyHref: string }) {
   const t = useTranslations("nav");
@@ -47,6 +48,7 @@ export function Nav({ buyHref }: { buyHref: string }) {
           </a>
         </nav>
         <div className="flex items-center gap-2 md:gap-3">
+          <ScheduleLink />
           <MyTicketLink />
           <LangSwitcher />
           <a

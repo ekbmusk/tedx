@@ -18,7 +18,7 @@ export async function Venue({
     >
       <div className="mx-auto max-w-7xl px-5 md:px-10">
         <p className="text-[10px] uppercase tracking-[0.3em] text-[var(--color-red)] md:text-xs">
-          04
+          05
         </p>
         <h2 className="mt-3 font-display text-3xl font-extrabold md:text-5xl">
           {t("title")}

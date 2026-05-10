@@ -12,7 +12,7 @@ export function ForumPhotos({ locale }: { locale: "kk" | "en" }) {
         <div className="mb-8 flex items-end justify-between px-5 md:mb-12 md:px-0">
           <div>
             <p className="text-[10px] uppercase tracking-[0.3em] text-[var(--color-red)] md:text-xs">
-              05
+              04
             </p>
             <h2 className="mt-3 font-display text-3xl font-extrabold md:text-5xl">
               {title}

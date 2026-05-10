@@ -5,6 +5,7 @@ import { Hero } from "@/components/landing/Hero";
 import { About } from "@/components/landing/About";
 import { Theme } from "@/components/landing/Theme";
 import { Speakers } from "@/components/landing/Speakers";
+import { Schedule } from "@/components/landing/Schedule";
 import { ForumPhotos } from "@/components/landing/ForumPhotos";
 import { Venue } from "@/components/landing/Venue";
 import { Footer } from "@/components/landing/Footer";
@@ -67,6 +68,7 @@ export default async function HomePage({
       <About />
       <Theme />
       <Speakers locale={locale} />
+      <Schedule locale={locale} />
       <ForumPhotos locale={locale} />
       <Venue locale={locale} buyHref={buyHref} />
       <Footer />

@@ -3,6 +3,7 @@
 // re-poll every few hours and pick up changes automatically. Bump
 // CALENDAR_SEQUENCE whenever schedule details change.
 import { event } from "@/config/event";
+import { SLOTS } from "@/config/schedule";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -11,7 +12,7 @@ const PRODID = "-//TEDxZhenysPark//Event//EN";
 
 // Increment whenever a slot time/title changes. Calendar clients use
 // SEQUENCE to decide whether to overwrite the local copy (RFC 5545).
-const CALENDAR_SEQUENCE = 3;
+const CALENDAR_SEQUENCE = 4;
 
 // 30 May 2026 (Asia/Almaty UTC+5, no DST → straight subtract 5h).
 const EVENT_DATE_UTC = "20260530";
@@ -22,131 +23,6 @@ function utc(localHHMM: string): string {
   const pad = (n: number) => String(n).padStart(2, "0");
   return `${EVENT_DATE_UTC}T${pad(utcH)}${pad(m)}00Z`;
 }
-
-type Slot =
-  | {
-      kind: "talk";
-      start: string;
-      end: string;
-      speakerSlug: string;
-    }
-  | {
-      kind:
-        | "registration"
-        | "open"
-        | "close"
-        | "coffee"
-        | "lunch"
-        | "qa"
-        | "music";
-      start: string;
-      end: string;
-      summary: string;
-    };
-
-// Public agenda. Excludes private operational slots (2-min transitions
-// between talks, post-closing buffer, private dinner for the team) —
-// only what attendees should see in their calendar.
-const SLOTS: Slot[] = [
-  {
-    kind: "registration",
-    start: "08:00",
-    end: "10:00",
-    summary: "Тіркелу · Registration",
-  },
-  {
-    kind: "open",
-    start: "10:00",
-    end: "10:05",
-    summary: "Ашылу · Opening",
-  },
-  { kind: "talk", start: "10:05", end: "10:20", speakerSlug: "nazym-zhangazy" },
-  {
-    kind: "talk",
-    start: "10:22",
-    end: "10:37",
-    speakerSlug: "ardan-galymuly",
-  },
-  {
-    kind: "talk",
-    start: "10:39",
-    end: "10:54",
-    speakerSlug: "aigerim-kusayinkyzy",
-  },
-  {
-    kind: "qa",
-    start: "10:54",
-    end: "11:04",
-    summary: "Q&A · 1–3 спикерлер / 1–3 speakers",
-  },
-  {
-    kind: "coffee",
-    start: "11:04",
-    end: "11:50",
-    summary: "Кофе-брейк · Coffee break",
-  },
-  {
-    kind: "talk",
-    start: "11:50",
-    end: "12:05",
-    speakerSlug: "kultay-adilova",
-  },
-  {
-    kind: "talk",
-    start: "12:07",
-    end: "12:22",
-    speakerSlug: "orken-kenzhebek",
-  },
-  {
-    kind: "talk",
-    start: "12:24",
-    end: "12:39",
-    speakerSlug: "aliya-ospanova",
-  },
-  {
-    kind: "qa",
-    start: "12:39",
-    end: "12:49",
-    summary: "Q&A · 4–6 спикерлер / 4–6 speakers",
-  },
-  {
-    kind: "music",
-    start: "12:50",
-    end: "13:00",
-    summary: "Анвар · музыкалық қойылым / musical performance",
-  },
-  {
-    kind: "lunch",
-    start: "13:00",
-    end: "14:30",
-    summary: "Обед · Lunch break",
-  },
-  {
-    kind: "talk",
-    start: "14:30",
-    end: "14:45",
-    speakerSlug: "sholpan-abdikhalikova",
-  },
-  {
-    kind: "talk",
-    start: "14:47",
-    end: "15:02",
-    speakerSlug: "inara-namazbayeva",
-  },
-  { kind: "talk", start: "15:04", end: "15:19", speakerSlug: "ayat-azimov" },
-  {
-    kind: "qa",
-    start: "15:19",
-    end: "15:29",
-    summary: "Q&A · 7–9 спикерлер / 7–9 speakers",
-  },
-  {
-    kind: "close",
-    start: "15:29",
-    end: "15:49",
-    summary: "Жабылу · Closing · ortaq foto / group photo",
-  },
-];
 
 function dtstamp(d = new Date()) {
   const pad = (n: number) => String(n).padStart(2, "0");
@@ -227,7 +103,7 @@ export async function GET() {
       description = s.description;
       uidSuffix = `talk-${slot.speakerSlug}`;
     } else {
-      summary = slot.summary;
+      summary = `${slot.summary.kk} · ${slot.summary.en}`;
       description = "";
       uidSuffix = `${slot.kind}-${slot.start.replace(":", "")}`;
     }

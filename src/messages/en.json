@@ -1,6 +1,7 @@
 {
   "nav": {
     "speakers": "Speakers",
+    "schedule": "Programme",
     "theme": "Theme",
     "about": "About TEDx",
     "venue": "Venue",
@@ -28,6 +29,10 @@
     "subtitle": "Nine ideas, nine voices",
     "back": "All speakers",
     "allSpeakers": "See all speakers"
+  },
+  "schedule": {
+    "title": "Programme of the day",
+    "subtitle": "9 speakers · 3 Q&A · music guest"
   },
   "venue": {
     "title": "When and where",
