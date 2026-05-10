@@ -40,11 +40,7 @@ export async function sendTicketActivatedEmail(args: TicketEmailArgs) {
   if (!isEmail(args.to)) return;
 
   try {
-    const attachments: {
-      filename: string;
-      content: string;
-      contentId?: string;
-    }[] = [];
+    const attachments: { filename: string; content: string }[] = [];
     let hasInlinePreview = false;
 
     if (args.tier && args.orderNo) {
@@ -54,15 +50,15 @@ export async function sendTicketActivatedEmail(args: TicketEmailArgs) {
         orderNo: args.orderNo,
         token: args.token,
       });
-      const base64 = png.toString("base64");
-      // Inline attachment (referenced from <img src="cid:ticket-preview">)
-      // doubles as the downloadable file — single PNG, single chip in
-      // the recipient's attachment list.
       attachments.push({
         filename: `TEDxZhenysPark-${args.orderNo}.png`,
-        content: base64,
-        contentId: "ticket-preview",
+        content: png.toString("base64"),
       });
+      // The inline preview is loaded via <img src="https://…/t/<token>/image">
+      // (an external URL Gmail proxies) instead of a cid: attachment. This
+      // keeps the HTML body small enough to dodge Gmail's "trim similar
+      // content" collapse — the cid path was inflating the body past
+      // ~102 KB and the recipient had to click "..." to see the ticket.
       hasInlinePreview = true;
     }
 
@@ -137,12 +133,13 @@ function ticketHtml(args: TicketEmailArgs, hasInlinePreview: boolean) {
   const tierLabel = args.tier ? TIER_LABEL[args.tier] : "—";
   const order = args.orderNo ?? "—";
   const ticketUrl = `${SITE}/t/${args.token}`;
+  const ticketImageUrl = `${SITE}/t/${args.token}/image`;
   const calendarUrl = `${SITE}/calendar.ics`;
 
   const previewBlock = hasInlinePreview
     ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;">
       <tr><td align="center">
-        <img src="cid:ticket-preview" alt="Сіздің билетіңіз · Your ticket"
+        <img src="${ticketImageUrl}" alt="Сіздің билетіңіз · Your ticket"
              style="display:block;max-width:100%;width:100%;height:auto;border-radius:14px;border:1px solid #1f1f1f;" />
       </td></tr>
     </table>`
