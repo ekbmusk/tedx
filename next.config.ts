@@ -8,10 +8,9 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.resolve(__dirname),
   },
-  // pdf-to-png-converter pulls in @napi-rs/canvas + pdfjs-dist with native
-  // .node bindings; let Next leave them outside the bundle and require()
-  // at runtime. We also access pdfjs-dist directly to set the worker path.
-  serverExternalPackages: ["pdf-to-png-converter", "pdfjs-dist"],
+  // @napi-rs/canvas ships native .node bindings for ticket-image rendering;
+  // leave it outside the bundle to be require()d at runtime.
+  serverExternalPackages: ["@napi-rs/canvas"],
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "tedturkestan.lovable.app" },

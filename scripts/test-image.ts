@@ -1,11 +1,10 @@
 /**
- * Generate sample PDFs for all 3 tiers without hitting Supabase.
- * Run: npx tsx scripts/test-pdf.ts
- * Outputs: tmp/ticket-{tier}.pdf
+ * Generate sample ticket PNGs for all 3 tiers. Run: npx tsx scripts/test-image.ts
+ * Outputs: tmp/ticket-{tier}.png
  */
 import fs from "node:fs/promises";
 import path from "node:path";
-import { generateTicketPdf } from "../src/lib/pdf";
+import { generateTicketImage } from "../src/lib/ticket-image";
 
 async function main() {
   const out = path.join(process.cwd(), "tmp");
@@ -18,15 +17,16 @@ async function main() {
   ];
 
   for (const s of samples) {
-    const pdf = await generateTicketPdf({
+    const t0 = Date.now();
+    const png = await generateTicketImage({
       tier: s.tier,
       holderName: s.holderName,
       orderNo: s.orderNo,
       token: `SAMPLE-${s.orderNo}`,
     });
-    const outFile = path.join(out, `ticket-${s.tier}.pdf`);
-    await fs.writeFile(outFile, pdf);
-    console.log(`✓ ${outFile} (${pdf.byteLength} bytes)`);
+    const outFile = path.join(out, `ticket-${s.tier}.png`);
+    await fs.writeFile(outFile, png);
+    console.log(`✓ ${outFile} (${png.byteLength} bytes, ${Date.now() - t0}ms)`);
   }
 }
 

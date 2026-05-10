@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { event, TIER_LABEL, type Tier } from "@/config/event";
 import { ActivationForm } from "@/components/ticket/ActivationForm";
 import { QrDisplay } from "@/components/ticket/QrDisplay";
-import { DownloadPdfButton } from "@/components/ticket/DownloadPdfButton";
+import { DownloadImageButton } from "@/components/ticket/DownloadImageButton";
 import { RememberTicket } from "@/components/ticket/RememberTicket";
 import { VenueMap } from "@/components/ticket/VenueMap";
 
@@ -77,7 +77,7 @@ export default async function TicketPage({
           <div className="self-center">
             <QrDisplay value={token} />
           </div>
-          <DownloadPdfButton token={token} orderNo={ticket.order_no} />
+          <DownloadImageButton token={token} orderNo={ticket.order_no} />
           <BackToSiteButton label={t("backToSite")} />
         </div>
         <TicketMeta ticket={ticket} t={t} />
@@ -98,7 +98,7 @@ export default async function TicketPage({
         <p className="text-center text-xs uppercase tracking-wider text-[var(--color-fg-muted)]">
           {t("saveScreenshot")}
         </p>
-        <DownloadPdfButton token={token} orderNo={ticket.order_no} />
+        <DownloadImageButton token={token} orderNo={ticket.order_no} />
         <AddToCalendarButton label={t("addToCalendar")} />
         <BackToSiteButton label={t("backToSite")} />
       </div>

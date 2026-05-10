@@ -2,8 +2,7 @@ import "server-only";
 import { Resend } from "resend";
 import { event } from "@/config/event";
 import { TIER_LABEL, type Tier } from "@/config/event";
-import { generateTicketPdf } from "@/lib/pdf";
-import { rasterizePdfFirstPage } from "@/lib/pdf-render";
+import { generateTicketImage } from "@/lib/ticket-image";
 
 // Lazy client — Resend constructor throws on missing key, which would fail
 // `next build` during page-data collection on environments without the key.
@@ -49,30 +48,26 @@ export async function sendTicketActivatedEmail(args: TicketEmailArgs) {
     let hasInlinePreview = false;
 
     if (args.tier && args.orderNo) {
-      const pdf = await generateTicketPdf({
+      const png = await generateTicketImage({
         tier: args.tier,
         holderName: args.holderName,
         orderNo: args.orderNo,
         token: args.token,
       });
+      const base64 = png.toString("base64");
+      // Same PNG used twice: as inline preview (cid) AND as downloadable
+      // attachment with a friendly filename. Most clients show one
+      // attachment chip plus the inline image in the body.
       attachments.push({
-        filename: `TEDxZhenysPark-${args.orderNo}.pdf`,
-        content: Buffer.from(pdf).toString("base64"),
+        filename: `TEDxZhenysPark-${args.orderNo}.png`,
+        content: base64,
       });
-
-      // Best-effort PNG rasterization of the PDF for inline preview.
-      // If it fails, the email still sends with just the PDF attachment.
-      try {
-        const png = await rasterizePdfFirstPage(pdf, 2);
-        attachments.push({
-          filename: "ticket.png",
-          content: png.toString("base64"),
-          content_id: "ticket-preview",
-        });
-        hasInlinePreview = true;
-      } catch (e) {
-        console.error("[email] rasterizePdfFirstPage failed:", e);
-      }
+      attachments.push({
+        filename: "ticket-preview.png",
+        content: base64,
+        content_id: "ticket-preview",
+      });
+      hasInlinePreview = true;
     }
 
     await resend.emails.send({
@@ -182,8 +177,8 @@ function ticketHtml(args: TicketEmailArgs, hasInlinePreview: boolean) {
     ${previewBlock}
 
     <p style="margin:0 0 20px;color:#f5f5f5;font-size:14px;line-height:1.55;">
-      <strong>PDF-билетті құрылғыңызға сақтап қойыңыз</strong> — кіру кезінде QR-код керек болады.<br>
-      <strong style="color:#8a8a8a;">We recommend saving the attached PDF ticket to your device</strong> — you'll need the QR at the entrance.
+      <strong>Билетті құрылғыңызға сақтап қойыңыз</strong> — кіру кезінде QR-код керек болады.<br>
+      <strong style="color:#8a8a8a;">We recommend saving the ticket image to your device</strong> — you'll need the QR at the entrance.
     </p>
 
     <p style="margin:0;">

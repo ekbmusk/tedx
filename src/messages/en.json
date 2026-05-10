@@ -94,7 +94,7 @@
     "notFoundBody": "The link may be invalid. Please contact the manager.",
     "name": "Holder",
     "saveScreenshot": "Save a screenshot",
-    "downloadPdf": "Download PDF ticket",
+    "download": "Download ticket",
     "tier": "Tier",
     "backToSite": "Back to site",
     "yourZone": "Your zone",
