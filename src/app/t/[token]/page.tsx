@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { event, TIER_LABEL, type Tier } from "@/config/event";
 import { ActivationForm } from "@/components/ticket/ActivationForm";
+import { ClearStaleToken } from "@/components/ticket/ClearStaleToken";
 import { DownloadImageButton } from "@/components/ticket/DownloadImageButton";
 import { RememberTicket } from "@/components/ticket/RememberTicket";
 import { VenueMap } from "@/components/ticket/VenueMap";
@@ -45,6 +46,7 @@ export default async function TicketPage({
   if (!ticket) {
     return (
       <Frame locale={locale}>
+        <ClearStaleToken token={token} />
         <h1 className="font-display text-3xl font-extrabold">
           {t("notFoundTitle")}
         </h1>
