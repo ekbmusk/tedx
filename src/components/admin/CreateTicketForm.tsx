@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { createTicket } from "@/app/admin/actions";
-import { TIERS, type Tier } from "@/config/event";
+import { TIERS, event, type Tier } from "@/config/event";
 
 export function CreateTicketForm() {
   const t = useTranslations("admin");
@@ -20,7 +20,25 @@ export function CreateTicketForm() {
 
   const url = result ? `${window.location.origin}/t/${result.token}` : "";
   const waMessage = encodeURIComponent(
-    `Сәлеметсіз бе! Мынау сіздің TEDxZhenysPark билетіңіз: ${url}\n\nСілтемені ашып, аты-жөніңізді енгізсеңіз — кіруге арналған QR кодын және PDF билетті аласыз.`,
+    [
+      "Сәлеметсіз бе! 👋",
+      "",
+      "TEDxZhenysPark — «Жаңғыру» конференциясына билет",
+      "сатып алғаныңыз үшін рахмет.",
+      "",
+      "Билетіңізді белсендіру үшін мына сілтемені ашыңыз:",
+      url,
+      "",
+      "1) Атыңыз бен email-ді енгізіңіз",
+      "2) Билетіңіз пайда болады — телефоныңызға сақтап қойыңыз",
+      "3) Кіру кезінде осы билетті волонтёрге көрсетесіз",
+      "",
+      `📅 ${event.dateLabel.kk}, тіркелу — 08:30`,
+      `📍 ${event.venue.kk}, ${event.city.kk}`,
+      "",
+      "Сұрағыңыз болса — осы чатқа жазыңыз.",
+      "Жаңғыруда жолығайық! 🔴",
+    ].join("\n"),
   );
 
   return (

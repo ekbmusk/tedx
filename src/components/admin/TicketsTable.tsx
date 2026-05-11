@@ -1,8 +1,8 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
-import { TIER_LABEL, type Tier } from "@/config/event";
+import { TIERS, TIER_LABEL, type Tier } from "@/config/event";
 
 type Ticket = {
   id: string;
@@ -16,9 +16,32 @@ type Ticket = {
   created_at: string;
 };
 
+type TierFilter = Tier | "all";
+
 export function TicketsTable({ tickets }: { tickets: Ticket[] }) {
   const t = useTranslations("admin");
+  const tt = useTranslations("admin.tierOptions");
   const [copied, setCopied] = useState<string | null>(null);
+  const [tierFilter, setTierFilter] = useState<TierFilter>("all");
+
+  const counts = useMemo(() => {
+    const c: Record<TierFilter, number> = {
+      all: tickets.length,
+      "pre-sale": 0,
+      vip: 0,
+      standard: 0,
+    };
+    for (const tk of tickets) if (tk.tier) c[tk.tier]++;
+    return c;
+  }, [tickets]);
+
+  const visible = useMemo(
+    () =>
+      tierFilter === "all"
+        ? tickets
+        : tickets.filter((tk) => tk.tier === tierFilter),
+    [tickets, tierFilter],
+  );
 
   const copy = async (token: string) => {
     const url = `${window.location.origin}/t/${token}`;
@@ -36,7 +59,30 @@ export function TicketsTable({ tickets }: { tickets: Ticket[] }) {
   }
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-[var(--color-line)]">
+    <>
+      <div className="mb-4 flex flex-wrap gap-2">
+        <FilterChip
+          active={tierFilter === "all"}
+          onClick={() => setTierFilter("all")}
+          label={`Барлығы · ${counts.all}`}
+        />
+        {TIERS.map((tier) => (
+          <FilterChip
+            key={tier}
+            active={tierFilter === tier}
+            onClick={() => setTierFilter(tier)}
+            label={`${tt(tier).split(" — ")[0]} · ${counts[tier]}`}
+            tier={tier}
+          />
+        ))}
+      </div>
+
+      {visible.length === 0 ? (
+        <div className="rounded-xl border border-dashed border-[var(--color-line)] p-10 text-center text-[var(--color-fg-muted)]">
+          —
+        </div>
+      ) : (
+        <div className="overflow-x-auto rounded-xl border border-[var(--color-line)]">
       <table className="w-full text-sm">
         <thead className="bg-black/40 text-left text-xs uppercase tracking-wider text-[var(--color-fg-muted)]">
           <tr>
@@ -51,7 +97,7 @@ export function TicketsTable({ tickets }: { tickets: Ticket[] }) {
           </tr>
         </thead>
         <tbody>
-          {tickets.map((tk) => (
+          {visible.map((tk) => (
             <tr
               key={tk.id}
               className="border-t border-[var(--color-line)] hover:bg-white/5"
@@ -103,7 +149,42 @@ export function TicketsTable({ tickets }: { tickets: Ticket[] }) {
           ))}
         </tbody>
       </table>
-    </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+function FilterChip({
+  active,
+  onClick,
+  label,
+  tier,
+}: {
+  active: boolean;
+  onClick: () => void;
+  label: string;
+  tier?: Tier;
+}) {
+  const accent = tier
+    ? {
+        "pre-sale": "border-amber-500/60 text-amber-200",
+        vip: "border-zinc-300/60 text-zinc-100",
+        standard: "border-red-500/60 text-red-200",
+      }[tier]
+    : "border-white text-white";
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-wider transition-colors ${
+        active
+          ? `${accent} bg-white/[0.06]`
+          : "border-[var(--color-line)] text-[var(--color-fg-muted)] hover:border-white hover:text-white"
+      }`}
+    >
+      {label}
+    </button>
   );
 }
 
