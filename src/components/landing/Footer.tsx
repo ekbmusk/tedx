@@ -49,8 +49,19 @@ export async function Footer() {
             )}
           </ul>
         </div>
-        <div className="text-xs text-[var(--color-fg-muted)]">
-          © {year} · {t("rights")}.
+        <div className="flex flex-col gap-2 text-xs text-[var(--color-fg-muted)]">
+          <p>© {year} · {t("rights")}.</p>
+          <p className="text-[10px] uppercase tracking-[0.25em] text-[var(--color-fg-muted)]/70">
+            Built by{" "}
+            <a
+              href="https://bekarys.me"
+              target="_blank"
+              rel="noreferrer"
+              className="text-white underline decoration-[var(--color-line)] decoration-1 underline-offset-4 transition-colors hover:text-[var(--color-red)] hover:decoration-[var(--color-red)]"
+            >
+              bekarys.me
+            </a>
+          </p>
         </div>
       </div>
     </footer>
