@@ -21,7 +21,7 @@ export function CreateTicketForm() {
   const url = result ? `${window.location.origin}/t/${result.token}` : "";
   const waMessage = encodeURIComponent(
     [
-      "Сәлеметсіз бе! 👋",
+      "Сәлеметсіз бе!",
       "",
       "TEDxZhenysPark — «Жаңғыру» конференциясына билет",
       "сатып алғаныңыз үшін рахмет.",
@@ -33,11 +33,11 @@ export function CreateTicketForm() {
       "2) Билетіңіз пайда болады — телефоныңызға сақтап қойыңыз",
       "3) Кіру кезінде осы билетті волонтёрге көрсетесіз",
       "",
-      `📅 ${event.dateLabel.kk}, тіркелу — 08:30`,
-      `📍 ${event.venue.kk}, ${event.city.kk}`,
+      `Күні: ${event.dateLabel.kk}, тіркелу — 08:30`,
+      `Орын: ${event.venue.kk}, ${event.city.kk}`,
       "",
       "Сұрағыңыз болса — осы чатқа жазыңыз.",
-      "Жаңғыруда жолығайық! 🔴",
+      "Жаңғыруда жолығайық!",
     ].join("\n"),
   );
 
