@@ -30,6 +30,8 @@ export function Nav({ buyHref }: { buyHref: string }) {
           <img
             src="/brand/wordmark.svg"
             alt="TEDxZhenysPark"
+            width={1304}
+            height={147}
             className="h-4 w-auto md:h-6"
           />
         </Link>

@@ -12,6 +12,15 @@ export async function Hero({
 
   return (
     <section className="relative overflow-hidden border-b border-[var(--color-line)] pb-16 pt-28 md:pb-24 md:pt-52">
+      {/* Preload the hero background — it's loaded via CSS `url()` which the
+          browser only discovers after parsing CSS, delaying LCP. React 19
+          hoists <link> elements to <head> automatically. */}
+      <link
+        rel="preload"
+        as="image"
+        href="/hero-bg.jpg"
+        fetchPriority="high"
+      />
       {/* hero background photo */}
       <div
         aria-hidden
@@ -43,6 +52,8 @@ export async function Hero({
           <img
             src="/brand/wordmark.svg"
             alt="TEDxZhenysPark"
+            width={1304}
+            height={147}
             className="h-4 w-auto md:h-5"
           />
           <span aria-hidden>·</span>

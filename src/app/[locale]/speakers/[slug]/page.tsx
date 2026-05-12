@@ -68,6 +68,8 @@ export default async function SpeakerPage({
             <img
               src="/brand/wordmark.svg"
               alt="TEDxZhenysPark"
+              width={1304}
+              height={147}
               className="h-5 w-auto md:h-6"
             />
           </Link>

@@ -116,6 +116,9 @@
       "vip": "VIP — басымды кіру",
       "standard": "STANDARD — жалпы"
     },
+    "filters": {
+      "all": "Барлығы"
+    },
     "scanner": {
       "title": "QR сканер",
       "ok": "Кіруге болады",

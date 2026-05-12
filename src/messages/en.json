@@ -116,6 +116,9 @@
       "vip": "VIP — priority entry",
       "standard": "STANDARD — general"
     },
+    "filters": {
+      "all": "All"
+    },
     "scanner": {
       "title": "QR scanner",
       "ok": "Allow entry",

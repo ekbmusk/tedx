@@ -108,7 +108,12 @@ function TicketImage({ token }: { token: string }) {
     <img
       src={`/t/${token}/image`}
       alt="Сіздің билетіңіз · Your ticket"
-      className="ticket-image w-full rounded-2xl border border-[var(--color-line)]"
+      // Intrinsic size of the rendered PNG template (1276x2268, see
+      // src/lib/ticket-image.ts). Sets aspect ratio so the slot is reserved
+      // on first paint — no CLS when the image loads.
+      width={1276}
+      height={2268}
+      className="ticket-image h-auto w-full rounded-2xl border border-[var(--color-line)]"
     />
   );
 }
@@ -175,6 +180,8 @@ function Frame({
         <img
           src="/brand/wordmark.svg"
           alt="TEDxZhenysPark"
+          width={1304}
+          height={147}
           className="ticket-brand mb-8 h-5 w-auto"
         />
         <div className="ticket-card rounded-2xl border border-[var(--color-line)] bg-[var(--color-bg-soft)] p-6 md:p-8">

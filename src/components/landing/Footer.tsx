@@ -12,6 +12,8 @@ export async function Footer() {
           <img
             src="/brand/wordmark.svg"
             alt="TEDxZhenysPark"
+            width={1304}
+            height={147}
             className="h-7 w-auto md:h-9"
           />
           <p className="mt-3 max-w-sm text-xs uppercase tracking-wider text-[var(--color-fg-muted)] md:text-sm">
