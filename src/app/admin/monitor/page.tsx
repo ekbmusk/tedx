@@ -6,7 +6,7 @@ import { AutoRefresh } from "@/components/admin/AutoRefresh";
 
 export const dynamic = "force-dynamic";
 
-const DOORS = ["1", "2", "3", "4", "5"] as const;
+const DOORS = ["1", "2"] as const;
 
 type StatRow = {
   status: "issued" | "activated" | "used";

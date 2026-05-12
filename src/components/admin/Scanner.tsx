@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { checkInTicket } from "@/app/admin/actions";
 import { TIER_LABEL, type Tier } from "@/config/event";
 
-const DOORS = ["1", "2", "3", "4", "5"] as const;
+const DOORS = ["1", "2"] as const;
 const DOOR_STORAGE_KEY = "tedx-scanner-door";
 
 type Result =
