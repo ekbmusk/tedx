@@ -1,9 +1,9 @@
 import { getTranslations } from "next-intl/server";
-import { requireUser } from "@/lib/auth";
+import { requireManager } from "@/lib/auth";
 import { CreateTicketForm } from "@/components/admin/CreateTicketForm";
 
 export default async function NewTicketPage() {
-  await requireUser();
+  await requireManager();
   const t = await getTranslations("admin.newTicket");
   return (
     <div className="mx-auto max-w-md">

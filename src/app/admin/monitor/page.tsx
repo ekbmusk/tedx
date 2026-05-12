@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { requireUser } from "@/lib/auth";
+import { requireManager } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { TIERS, TIER_LABEL, type Tier } from "@/config/event";
 import { AutoRefresh } from "@/components/admin/AutoRefresh";
@@ -16,7 +16,7 @@ type StatRow = {
 };
 
 export default async function MonitorPage() {
-  await requireUser();
+  await requireManager();
   const t = await getTranslations("admin.monitor");
   const supabase = await createClient();
   const { data, error } = await supabase.rpc("monitor_stats");

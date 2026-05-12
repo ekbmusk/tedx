@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { customAlphabet } from "nanoid";
 import { createClient } from "@/lib/supabase/server";
+import { getUserRole } from "@/lib/auth";
 import { TIERS, type Tier } from "@/config/event";
 
 const nanoid = customAlphabet("ABCDEFGHJKMNPQRSTUVWXYZ23456789", 10);
@@ -12,11 +13,17 @@ export async function signIn(formData: FormData) {
   const email = String(formData.get("email") || "").trim();
   const password = String(formData.get("password") || "");
   const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  const { data: signInData, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
   if (error) {
     return { ok: false as const, error: error.message };
   }
-  redirect("/admin");
+  // Scanners land directly on the QR camera page; managers on the tickets list.
+  redirect(
+    getUserRole(signInData.user) === "scanner" ? "/admin/scan" : "/admin",
+  );
 }
 
 export async function signOut() {
@@ -29,6 +36,11 @@ export async function createTicket(formData: FormData) {
   const supabase = await createClient();
   const { data: userData } = await supabase.auth.getUser();
   if (!userData.user) return { ok: false as const, error: "unauthenticated" };
+  // Defence-in-depth — the page that hosts CreateTicketForm is already
+  // gated by requireManager, but a scanner could theoretically POST here.
+  if (getUserRole(userData.user) !== "manager") {
+    return { ok: false as const, error: "forbidden" };
+  }
 
   const tier = String(formData.get("tier") || "") as Tier;
   if (!TIERS.includes(tier)) {

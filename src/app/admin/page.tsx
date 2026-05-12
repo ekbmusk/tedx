@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
-import { requireUser } from "@/lib/auth";
+import { requireManager } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { TicketsTable } from "@/components/admin/TicketsTable";
 
 export default async function AdminHomePage() {
-  await requireUser();
+  await requireManager();
   const t = await getTranslations("admin");
   const supabase = await createClient();
   const { data: tickets, error } = await supabase
