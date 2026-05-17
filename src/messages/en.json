@@ -33,7 +33,17 @@
   "schedule": {
     "title": "Programme of the day",
     "subtitle": "9 speakers · 3 Q&A · music guest",
-    "downloadPdf": "Download PDF"
+    "downloadPdf": "Download PDF",
+    "totalLabel": "Total",
+    "notesLabel": "Notes",
+    "totalTalks": "9 talks × 15 min",
+    "totalQa": "3 Q&A blocks",
+    "totalPerformance": "Performance",
+    "totalCoffeeLunch": "Coffee + Lunch",
+    "totalRegistration": "Registration",
+    "totalWindow": "Programme window",
+    "note1": "Two-minute buffer between speakers — moderator transition, applause, microphone change.",
+    "note2": "Lunch arranged for 10 people — speakers and core team."
   },
   "venue": {
     "title": "When and where",

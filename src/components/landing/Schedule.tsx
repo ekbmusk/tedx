@@ -10,7 +10,13 @@ import {
 } from "@/config/schedule";
 import { useHasTicket } from "@/lib/use-has-ticket";
 
-const HIDDEN_KINDS = new Set<Slot["kind"]>(["registration", "open", "close"]);
+const RED_KINDS = new Set<Slot["kind"]>([
+  "open",
+  "coffee",
+  "music",
+  "lunch",
+  "close",
+]);
 
 export function Schedule({ locale }: { locale: "kk" | "en" }) {
   const t = useTranslations("schedule");
@@ -20,8 +26,6 @@ export function Schedule({ locale }: { locale: "kk" | "en" }) {
   // to ticket holders — keeping it out of the HTML entirely (vs. hidden
   // via CSS) prevents leaks via view-source and search crawlers.
   if (!hasTicket) return null;
-
-  const visible = SLOTS.filter((s) => !HIDDEN_KINDS.has(s.kind));
 
   return (
     <section
@@ -67,7 +71,7 @@ export function Schedule({ locale }: { locale: "kk" | "en" }) {
         </div>
 
         <ol className="border-y border-[var(--color-line)]">
-          {visible.map((slot, i) => (
+          {SLOTS.map((slot, i) => (
             <Row
               key={`${slot.kind}-${slot.start}-${i}`}
               slot={slot}
@@ -75,6 +79,11 @@ export function Schedule({ locale }: { locale: "kk" | "en" }) {
             />
           ))}
         </ol>
+
+        <div className="mt-10 grid gap-8 md:mt-12 md:grid-cols-2 md:gap-12">
+          <Totals locale={locale} />
+          <Notes locale={locale} />
+        </div>
       </div>
     </section>
   );
@@ -82,6 +91,16 @@ export function Schedule({ locale }: { locale: "kk" | "en" }) {
 
 function Row({ slot, locale }: { slot: Slot; locale: "kk" | "en" }) {
   const duration = formatDuration(slotDurationMinutes(slot), locale);
+  const isRed = RED_KINDS.has(slot.kind);
+  const accent = isRed
+    ? "border-l-[var(--color-red)] bg-white/[0.02]"
+    : "border-l-[var(--color-line)]";
+  const timeClass = `font-mono text-xs tabular-nums md:text-sm ${
+    isRed ? "text-[var(--color-red)]" : "text-[var(--color-fg-muted)]"
+  }`;
+  const durationClass = `shrink-0 font-mono text-[11px] uppercase tabular-nums tracking-wider md:text-xs ${
+    isRed ? "text-[var(--color-red)]" : "text-[var(--color-fg-muted)]"
+  }`;
 
   if (slot.kind === "talk") {
     const speaker = event.speakers.find((s) => s.slug === slot.speakerSlug);
@@ -90,10 +109,10 @@ function Row({ slot, locale }: { slot: Slot; locale: "kk" | "en" }) {
       <li className="border-t border-[var(--color-line)] first:border-t-0">
         <a
           href={`/speakers/${slot.speakerSlug}`}
-          className="group grid grid-cols-[56px_1fr_auto] items-center gap-3 border-l-2 border-[var(--color-line)] px-4 py-4 transition-colors hover:border-[var(--color-red)] hover:bg-white/[0.02] md:grid-cols-[88px_1fr_auto] md:gap-6 md:px-6 md:py-5"
+          className="group grid grid-cols-[100px_1fr_auto] items-center gap-3 border-l-2 border-[var(--color-line)] px-4 py-4 transition-colors hover:border-[var(--color-red)] hover:bg-white/[0.02] md:grid-cols-[140px_1fr_auto] md:gap-6 md:px-6 md:py-5"
         >
-          <span className="font-mono text-sm tabular-nums text-[var(--color-fg-muted)] md:text-base">
-            {slot.start}
+          <span className={timeClass}>
+            {slot.start} — {slot.end}
           </span>
           <div className="min-w-0">
             <div className="font-display text-base font-bold leading-tight transition-colors group-hover:text-[var(--color-red)] md:text-lg">
@@ -117,10 +136,6 @@ function Row({ slot, locale }: { slot: Slot; locale: "kk" | "en" }) {
     );
   }
 
-  const accent =
-    slot.kind === "qa" || slot.kind === "music"
-      ? "border-l-[var(--color-red)] bg-white/[0.02]"
-      : "border-l-[var(--color-line)]";
   const icon =
     slot.kind === "coffee"
       ? "☕"
@@ -129,27 +144,91 @@ function Row({ slot, locale }: { slot: Slot; locale: "kk" | "en" }) {
       : slot.kind === "music"
       ? "🎤"
       : null;
+  const host =
+    slot.kind === "open" || slot.kind === "close" ? slot.host : null;
 
   return (
     <li className="border-t border-[var(--color-line)] first:border-t-0">
       <div
-        className={`grid grid-cols-[56px_1fr_auto] items-center gap-3 border-l-2 px-4 py-3.5 md:grid-cols-[88px_1fr_auto] md:gap-6 md:px-6 md:py-4 ${accent}`}
+        className={`grid grid-cols-[100px_1fr_auto] items-center gap-3 border-l-2 px-4 py-3.5 md:grid-cols-[140px_1fr_auto] md:gap-6 md:px-6 md:py-4 ${accent}`}
       >
-        <span className="font-mono text-sm tabular-nums text-[var(--color-fg-muted)] md:text-base">
-          {slot.start}
+        <span className={timeClass}>
+          {slot.start} — {slot.end}
         </span>
-        <div className="flex min-w-0 items-center gap-2 font-display text-sm font-semibold uppercase tracking-wide md:text-base">
-          {icon && (
-            <span aria-hidden className="text-base md:text-lg">
-              {icon}
-            </span>
+        <div className="min-w-0">
+          <div className="flex items-center gap-2 font-display text-sm font-semibold uppercase tracking-wide md:text-base">
+            {icon && (
+              <span aria-hidden className="text-base md:text-lg">
+                {icon}
+              </span>
+            )}
+            <span className="truncate">{slot.summary[locale]}</span>
+          </div>
+          {host && (
+            <div className="mt-0.5 truncate text-xs text-[var(--color-red)] md:text-sm">
+              {host}
+            </div>
           )}
-          <span className="truncate">{slot.summary[locale]}</span>
         </div>
-        <span className="shrink-0 font-mono text-[11px] uppercase tabular-nums tracking-wider text-[var(--color-fg-muted)] md:text-xs">
-          {duration}
-        </span>
+        <span className={durationClass}>{duration}</span>
       </div>
     </li>
+  );
+}
+
+function Totals({ locale }: { locale: "kk" | "en" }) {
+  const t = useTranslations("schedule");
+  const rows: Array<[string, string]> = [
+    [t("totalTalks"), formatDuration(135, locale)],
+    [t("totalQa"), formatDuration(30, locale)],
+    [t("totalPerformance"), formatDuration(10, locale)],
+    [t("totalCoffeeLunch"), formatDuration(100, locale)],
+    [t("totalRegistration"), formatDuration(120, locale)],
+  ];
+
+  return (
+    <div>
+      <div className="mb-4 flex items-center gap-3">
+        <span className="h-px w-6 bg-[var(--color-red)]" aria-hidden />
+        <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--color-red)] md:text-xs">
+          {t("totalLabel")}
+        </span>
+      </div>
+      <dl className="space-y-2">
+        {rows.map(([label, value]) => (
+          <div
+            key={label}
+            className="flex items-baseline justify-between gap-4 border-b border-dotted border-[var(--color-line)] pb-2 text-sm"
+          >
+            <dt className="text-[var(--color-fg-muted)]">{label}</dt>
+            <dd className="font-mono tabular-nums">{value}</dd>
+          </div>
+        ))}
+        <div className="flex items-baseline justify-between gap-4 pt-1 text-sm font-semibold">
+          <dt>{t("totalWindow")}</dt>
+          <dd className="font-mono tabular-nums text-[var(--color-red)]">
+            10:00 — 16:00
+          </dd>
+        </div>
+      </dl>
+    </div>
+  );
+}
+
+function Notes({ locale: _locale }: { locale: "kk" | "en" }) {
+  const t = useTranslations("schedule");
+  return (
+    <div>
+      <div className="mb-4 flex items-center gap-3">
+        <span className="h-px w-6 bg-[var(--color-red)]" aria-hidden />
+        <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--color-red)] md:text-xs">
+          {t("notesLabel")}
+        </span>
+      </div>
+      <div className="space-y-4 text-sm leading-relaxed text-[var(--color-fg-muted)]">
+        <p>{t("note1")}</p>
+        <p>{t("note2")}</p>
+      </div>
+    </div>
   );
 }

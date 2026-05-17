@@ -12,14 +12,14 @@ export type Slot =
       speakerSlug: string;
     }
   | {
-      kind:
-        | "registration"
-        | "open"
-        | "close"
-        | "coffee"
-        | "lunch"
-        | "qa"
-        | "music";
+      kind: "open" | "close";
+      start: string;
+      end: string;
+      summary: { kk: string; en: string };
+      host: string;
+    }
+  | {
+      kind: "registration" | "coffee" | "lunch" | "qa" | "music";
       start: string;
       end: string;
       summary: { kk: string; en: string };
@@ -39,6 +39,7 @@ export const SLOTS: Slot[] = [
     start: "10:00",
     end: "10:10",
     summary: { kk: "Ашылу сөзі", en: "Opening Remarks" },
+    host: "Payayeva Symbat",
   },
   { kind: "talk", start: "10:15", end: "10:30", speakerSlug: "nazym-zhangazy" },
   { kind: "talk", start: "10:35", end: "10:50", speakerSlug: "ardan-galymuly" },
@@ -74,8 +75,8 @@ export const SLOTS: Slot[] = [
     start: "13:10",
     end: "13:20",
     summary: {
-      kk: "Анвар · музыкалық қойылым",
-      en: "Anvar · musical performance",
+      kk: "Анвар · 2 ән",
+      en: "Anvar · 2 Songs",
     },
   },
   {
@@ -108,6 +109,7 @@ export const SLOTS: Slot[] = [
     start: "15:40",
     end: "16:00",
     summary: { kk: "Қорытынды сөз", en: "Closing Remarks" },
+    host: "Payayeva Symbat",
   },
 ];
 

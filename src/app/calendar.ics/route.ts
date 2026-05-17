@@ -12,7 +12,7 @@ const PRODID = "-//TEDxZhenysPark//Event//EN";
 
 // Increment whenever a slot time/title changes. Calendar clients use
 // SEQUENCE to decide whether to overwrite the local copy (RFC 5545).
-const CALENDAR_SEQUENCE = 5;
+const CALENDAR_SEQUENCE = 6;
 
 // 30 May 2026 (Asia/Almaty UTC+5, no DST → straight subtract 5h).
 const EVENT_DATE_UTC = "20260530";
