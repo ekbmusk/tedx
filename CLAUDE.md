@@ -34,7 +34,7 @@ Three actors, three surfaces, one row in `public.tickets`:
 
 1. **Manager** signs in at `/admin/login` and creates a ticket on `/admin/new`. `createTicket` in `src/app/admin/actions.ts` calls the `next_order_no(tier)` RPC for a per-tier sequence number (`PS-001`, `VIP-001`, `ST-001`) and inserts a row with a 10-char nanoid token (alphabet excludes ambiguous `I L O 0 1`). Manager forwards `https://<site>/t/<token>` over WhatsApp.
 2. **Buyer** opens `/t/[token]`. First open shows a name + **required email** form. Submit calls `activateTicket` server action → `activate_ticket` RPC, which atomically flips `issued → activated`, stamps `holder_name` via `coalesce` (so re-submits don't overwrite). The action also fires `sendTicketActivatedEmail` (best-effort). Subsequent opens show the inline ticket PNG, download button, calendar subscribe button, back-to-site, and a `VenueMap` highlighting the buyer's tier.
-3. **Volunteer at the door** uses `/admin/scan` (camera, html5-qrcode). Scanner has a **door picker (1–5)** persisted in `localStorage["tedx-scanner-door"]` — camera doesn't activate until a door is picked. Each scan calls `checkInTicket(token, door)` → `check_in_ticket(p_token, p_door)` RPC. Only `activated` rows transition to `used`; UI colours green/yellow/red based on `prev_status`.
+3. **Volunteer at the door** uses `/admin/scan` (camera, html5-qrcode). Scanner has a **door picker (1–2)** persisted in `localStorage["tedx-scanner-door"]` — camera doesn't activate until a door is picked. The door list is `DOORS` in both `src/components/admin/Scanner.tsx` and `src/app/admin/monitor/page.tsx` — keep them in sync if the venue layout changes. Each scan calls `checkInTicket(token, door)` → `check_in_ticket(p_token, p_door)` RPC. Only `activated` rows transition to `used`; UI colours green/yellow/red based on `prev_status`.
 
 The state machine is enforced inside the SECURITY DEFINER RPCs, not in the action layer.
 
@@ -48,6 +48,8 @@ Pipeline (`src/lib/ticket-image.ts`):
 3. Same image is reused everywhere: site download (`<DownloadImageButton/>`), inline `<img>` on the ticket page, and as both inline `<img src=URL>` *and* attachment in the activation email.
 
 `@napi-rs/canvas` is in `next.config.ts:serverExternalPackages` so the native `.node` binding is required at runtime, not bundled.
+
+Successful (status 200) image responses ship `Cache-Control: public, max-age=31536000, immutable` — token + holder + tier are stable once activated (holder_name is set via `coalesce` so re-submits don't mutate), so Vercel's edge CDN caches per-URL forever. Error paths (403/404/409/500) explicitly send `Cache-Control: no-store` so a pre-activation 403 cannot stick at the edge and block the user after they activate. If the template PNG is ever redesigned, bust the cache by appending `?v=N` to the URLs in `src/app/t/[token]/page.tsx` and `src/components/ticket/DownloadImageButton.tsx`.
 
 ### Email
 
@@ -65,7 +67,7 @@ Resend SDK quirk: input is `contentId` (camelCase) for inline-cid attachments, *
 `/calendar.ics` returns a multi-VEVENT subscription feed. The "Add to calendar" button uses `webcal://www.tedx.kz/calendar.ics` — calendar apps **subscribe** and re-poll on `REFRESH-INTERVAL:PT1H` rather than downloading a frozen snapshot.
 
 `SLOTS[]` lives in `src/config/schedule.ts` and is the single source of truth for the day's programme. Two consumers:
-- `/calendar.ics` route — emits one container `VEVENT` (10:00–15:49, `TRANSP:TRANSPARENT` so it doesn't double-block the user's busy time) plus 18 inner slot events: registration, opening, 9 speaker talks (resolved via `speakerSlug` against `event.speakers`), 3 Q&A blocks, coffee break, music guest (Анвар), lunch, closing. Non-talk `summary` is bilingual `{kk, en}`; the .ics route concatenates them as `${kk} · ${en}` for the `SUMMARY` line.
+- `/calendar.ics` route — emits one container `VEVENT` (10:00–16:00, `TRANSP:TRANSPARENT` so it doesn't double-block the user's busy time) plus 18 inner slot events: registration, opening, 9 speaker talks (resolved via `speakerSlug` against `event.speakers`), 3 Q&A blocks, coffee break, music guest (Анвар), lunch, closing. Non-talk `summary` is bilingual `{kk, en}`; the .ics route concatenates them as `${kk} · ${en}` for the `SUMMARY` line.
 - `<Schedule/>` landing section — renders the same `SLOTS[]` as a timeline, filtering out `registration / open / close`. **Gated behind `useHasTicket()` (`src/lib/use-has-ticket.ts`)**: the section is a `"use client"` component that returns `null` on SSR and for visitors without `localStorage["tedx-ticket-token"]`, so the programme stays out of the public HTML and only ticket holders see it after hydration. The section is unnumbered — guests just see the regular `01..05` flow (About, Theme, Speakers, ForumPhotos, Venue) with no gap. Holders get an extra `<Schedule>` block between Speakers and ForumPhotos plus a `<ScheduleLink>` pill in the Nav next to `<MyTicketLink>` (both share `useHasTicket()`).
 
 Times are stored as `"HH:MM"` Asia/Almaty in `SLOTS[]` — no DST, straight UTC = local − 5h.
@@ -77,6 +79,34 @@ Anyone who already imported the *old* single-event `.ics` as a snapshot (before 
 ### Door monitor
 
 `/admin/monitor` calls `monitor_stats()` (one RPC returning `(status, tier, door, count)` rows) and aggregates in JS into total `used / used+activated` with progress bar, per-tier breakdown, and per-door rows. `<AutoRefresh interval={7000}/>` calls `router.refresh()` every 7 s; the page is `dynamic = "force-dynamic"` so refreshes hit Supabase.
+
+### Admin tickets list
+
+`/admin` renders `src/components/admin/TicketsTable.tsx` — client component over a server-side fetched batch (`order by created_at desc limit 500`). Three layers of filtering / sorting are client-side over that batch:
+
+- Status counter row at the top: total counts for `issued / activated / used` (so the manager sees at a glance how many haven't activated yet).
+- Tier filter chips (`all / pre-sale / vip / standard`).
+- Sortable column headers — `№ / санат / иесі / email / статус / токен / created`. Tier sort uses `TIER_RANK` (`vip → pre-sale → standard`), status sort uses `STATUS_RANK` (`issued → activated → used`) so `asc` surfaces unactivated tickets first for the chase list. Nulls always sort last regardless of direction.
+
+### Admin roles (manager / scanner)
+
+`src/lib/auth.ts` exposes `getUserRole(user)` which reads `user.app_metadata.role` and returns `"scanner"` only when that field is the literal string `"scanner"` — everything else (including missing field) is `"manager"`. The default-to-manager behaviour exists so existing accounts (`assemay@tedx.kz` etc.) keep full access without a backfill; new volunteer accounts must have the role set explicitly:
+
+```sql
+update auth.users
+set raw_app_meta_data =
+  coalesce(raw_app_meta_data, '{}'::jsonb) || '{"role":"scanner"}'::jsonb
+where email = 'volunteer@tedx.kz';
+```
+
+Gating:
+- `requireManager()` → used by `/admin`, `/admin/new`, `/admin/monitor`. Scanners redirect to `/admin/scan`.
+- `requireUser()` → used by `/admin/scan`. Open to both roles.
+- `signIn` action and the `/admin/login` page send scanners straight to `/admin/scan` so volunteers never see the tickets list.
+- `createTicket` action does its own role check as defence-in-depth — a scanner POSTing directly is rejected even though the form page is gated.
+- `AdminNav` hides the `Билеттер / Жаңа билет / Монитор` links when role is scanner.
+
+RLS is **not** role-aware — the `tickets` policy still allows any authenticated user to read/write. The split is UI/server-action-level only. Acceptable for the event horizon (one-day usage, volunteers don't have direct Supabase access). If you tighten later, scan flow already runs through `check_in_ticket` SECURITY DEFINER so RLS can be locked down on `tickets` directly without breaking it.
 
 ### Ticket ↔ landing connection
 
