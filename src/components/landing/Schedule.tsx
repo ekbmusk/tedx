@@ -80,9 +80,8 @@ export function Schedule({ locale }: { locale: "kk" | "en" }) {
           ))}
         </ol>
 
-        <div className="mt-10 grid gap-8 md:mt-12 md:grid-cols-2 md:gap-12">
+        <div className="mt-10 md:mt-12">
           <Totals locale={locale} />
-          <Notes locale={locale} />
         </div>
       </div>
     </section>
@@ -215,20 +214,3 @@ function Totals({ locale }: { locale: "kk" | "en" }) {
   );
 }
 
-function Notes({ locale: _locale }: { locale: "kk" | "en" }) {
-  const t = useTranslations("schedule");
-  return (
-    <div>
-      <div className="mb-4 flex items-center gap-3">
-        <span className="h-px w-6 bg-[var(--color-red)]" aria-hidden />
-        <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--color-red)] md:text-xs">
-          {t("notesLabel")}
-        </span>
-      </div>
-      <div className="space-y-4 text-sm leading-relaxed text-[var(--color-fg-muted)]">
-        <p>{t("note1")}</p>
-        <p>{t("note2")}</p>
-      </div>
-    </div>
-  );
-}
