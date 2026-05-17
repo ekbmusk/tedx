@@ -12,7 +12,7 @@ const PRODID = "-//TEDxZhenysPark//Event//EN";
 
 // Increment whenever a slot time/title changes. Calendar clients use
 // SEQUENCE to decide whether to overwrite the local copy (RFC 5545).
-const CALENDAR_SEQUENCE = 4;
+const CALENDAR_SEQUENCE = 5;
 
 // 30 May 2026 (Asia/Almaty UTC+5, no DST → straight subtract 5h).
 const EVENT_DATE_UTC = "20260530";
@@ -80,9 +80,9 @@ export async function GET() {
     `DTSTAMP:${now}`,
     `SEQUENCE:${CALENDAR_SEQUENCE}`,
     `DTSTART:${utc("10:00")}`,
-    `DTEND:${utc("15:49")}`,
+    `DTEND:${utc("16:00")}`,
     "SUMMARY:TEDxZhenysPark · Жаңғыру / Renewal",
-    "DESCRIPTION:TED-licensed conference in Türkistan. Theme: Renewal. Doors open 08:00\\, talks start 10:00\\, closing 15:49.",
+    "DESCRIPTION:TED-licensed conference in Türkistan. Theme: Renewal. Doors open 08:00\\, talks start 10:00\\, closing 16:00.",
     `LOCATION:${LOCATION}`,
     "URL:https://www.tedx.kz/",
     "STATUS:CONFIRMED",
