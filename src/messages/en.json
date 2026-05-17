@@ -32,7 +32,8 @@
   },
   "schedule": {
     "title": "Programme of the day",
-    "subtitle": "9 speakers · 3 Q&A · music guest"
+    "subtitle": "9 speakers · 3 Q&A · music guest",
+    "downloadPdf": "Download PDF"
   },
   "venue": {
     "title": "When and where",
@@ -65,6 +66,7 @@
     "backToSite": "Back to site",
     "yourZone": "Your zone",
     "addToCalendar": "Add to calendar",
+    "downloadAgenda": "Download agenda (PDF)",
     "errorNameRequired": "Please enter your name",
     "errorEmailRequired": "Email is required — your ticket copy is sent there",
     "errorEmailInvalid": "Email format looks invalid",

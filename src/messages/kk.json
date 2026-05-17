@@ -32,7 +32,8 @@
   },
   "schedule": {
     "title": "Бағдарлама",
-    "subtitle": "9 спикер · 3 Q&A · музыкалық қойылым"
+    "subtitle": "9 спикер · 3 Q&A · музыкалық қойылым",
+    "downloadPdf": "PDF жүктеу"
   },
   "venue": {
     "title": "Қашан және қайда",
@@ -65,6 +66,7 @@
     "backToSite": "Сайтқа оралу",
     "yourZone": "Сіздің зонаңыз",
     "addToCalendar": "Күнтізбеге қосу",
+    "downloadAgenda": "Бағдарламаны жүктеу (PDF)",
     "errorNameRequired": "Атыңызды енгізіңіз",
     "errorEmailRequired": "Email енгізіңіз — билет көшірмесі сонда жіберіледі",
     "errorEmailInvalid": "Email пішімі дұрыс емес",

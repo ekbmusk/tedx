@@ -29,13 +29,41 @@ export function Schedule({ locale }: { locale: "kk" | "en" }) {
       className="border-b border-[var(--color-line)] py-20 md:py-32"
     >
       <div className="mx-auto max-w-5xl px-5 md:px-10">
-        <div className="mb-8 md:mb-12">
-          <h2 className="font-display text-3xl font-extrabold md:text-5xl">
-            {t("title")}
-          </h2>
-          <p className="mt-2 text-sm text-[var(--color-fg-muted)] md:text-base">
-            {event.dateLabel[locale]} · {event.venue[locale]} · {t("subtitle")}
-          </p>
+        <div className="mb-8 flex flex-col gap-4 md:mb-12 md:flex-row md:items-end md:justify-between md:gap-6">
+          <div>
+            <h2 className="font-display text-3xl font-extrabold md:text-5xl">
+              {t("title")}
+            </h2>
+            <p className="mt-2 text-sm text-[var(--color-fg-muted)] md:text-base">
+              {event.dateLabel[locale]} · {event.venue[locale]} · {t("subtitle")}
+            </p>
+          </div>
+          <a
+            href={
+              locale === "en"
+                ? "/agenda/TEDxZhenysPark_Agenda_Dark_EN.pdf"
+                : "/agenda/TEDxZhenysPark_Agenda_Dark_KZ.pdf"
+            }
+            download
+            className="inline-flex shrink-0 items-center gap-2 self-start rounded-full border border-[var(--color-line)] px-4 py-2 text-sm font-semibold text-white transition-colors hover:border-white md:self-auto"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              className="h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              aria-hidden
+            >
+              <path
+                d="M12 4v12m0 0l-4-4m4 4l4-4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path d="M4 20h16" strokeLinecap="round" />
+            </svg>
+            {t("downloadPdf")}
+          </a>
         </div>
 
         <ol className="border-y border-[var(--color-line)]">

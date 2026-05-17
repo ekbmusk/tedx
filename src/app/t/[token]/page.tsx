@@ -77,6 +77,7 @@ export default async function TicketPage({
         <div className="mt-6 flex flex-col gap-3">
           <TicketImage token={token} />
           <DownloadImageButton token={token} orderNo={ticket.order_no} />
+          <DownloadAgendaButton locale={locale} label={t("downloadAgenda")} />
           <BackToSiteButton label={t("backToSite")} />
         </div>
         <TicketMeta ticket={ticket} t={t} />
@@ -94,6 +95,7 @@ export default async function TicketPage({
         <TicketImage token={token} />
         <DownloadImageButton token={token} orderNo={ticket.order_no} />
         <AddToCalendarButton label={t("addToCalendar")} />
+        <DownloadAgendaButton locale={locale} label={t("downloadAgenda")} />
         <BackToSiteButton label={t("backToSite")} />
       </div>
       <TicketMeta ticket={ticket} t={t} />
@@ -137,6 +139,39 @@ function AddToCalendarButton({ label }: { label: string }) {
       >
         <rect x="3" y="5" width="18" height="16" rx="2" strokeLinejoin="round" />
         <path d="M3 9h18M8 3v4M16 3v4" strokeLinecap="round" />
+      </svg>
+      {label}
+    </a>
+  );
+}
+
+function DownloadAgendaButton({
+  locale,
+  label,
+}: {
+  locale: "kk" | "en";
+  label: string;
+}) {
+  const href =
+    locale === "en"
+      ? "/agenda/TEDxZhenysPark_Agenda_Dark_EN.pdf"
+      : "/agenda/TEDxZhenysPark_Agenda_Dark_KZ.pdf";
+  return (
+    <a
+      href={href}
+      download
+      className="flex w-full items-center justify-center gap-2 rounded-full border border-[var(--color-line)] px-6 py-3 text-base font-semibold text-white transition-colors hover:border-white"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        className="h-5 w-5"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        aria-hidden
+      >
+        <path d="M12 4v12m0 0l-4-4m4 4l4-4" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M4 20h16" strokeLinecap="round" />
       </svg>
       {label}
     </a>
